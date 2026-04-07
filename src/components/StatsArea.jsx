@@ -1,5 +1,3 @@
-// components/StatsArea.jsx
-import React from 'react';
 import { Card, Row, Col, Table, ProgressBar } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
@@ -45,7 +43,7 @@ const StatsArea = ({ stats, isAuthenticated }) => {
     };
 
     return (
-        <Card className="shadow-sm">
+        <Card className="border-0">
             <Card.Body>
                 <Card.Title className="mb-4 text-center fs-3">
                     Результаты тренировки
@@ -82,7 +80,7 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                 {/* Блок с временем реакции */}
                 <Row className="mb-4">
                     <Col md={6}>
-                        <Card className="bg-light">
+                        <Card className="bg-light border-0">
                             <Card.Body>
                                 <h5>⏱️ Среднее время нажатия</h5>
                                 {fastestLetter && (
@@ -105,7 +103,7 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                         </Card>
                     </Col>
                     <Col md={6}>
-                        <Card className="bg-light">
+                        <Card className="bg-light border-0">
                             <Card.Body>
                                 <h5>📊 Общее время</h5>
                                 <div className="d-flex justify-content-between mb-2">
@@ -198,7 +196,7 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                 <Row className="mt-4">
                     <Col md={6}>
                         <h5>Проблемные буквы</h5>
-                        <Table striped bordered hover size="sm">
+                        <Table hover size="sm">
                             <thead>
                                 <tr>
                                     <th>Буква</th>
@@ -224,7 +222,7 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                     
                     <Col md={6}>
                         <h5>Проблемные биграммы</h5>
-                        <Table striped bordered hover size="sm">
+                        <Table hover size="sm">
                             <thead>
                                 <tr>
                                     <th>Биграмма</th>

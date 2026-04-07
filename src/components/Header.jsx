@@ -1,14 +1,14 @@
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../slices/authSlice';
+import { logout, fetchUserProfile } from '../slices/authSlice';
 import { useState, useEffect } from 'react';
 
 import iconLight from '../assets/logo192.png';
 import iconDark from '../assets/logo192-dark.png';
 
 const Header = () => {
-    const { isAuthenticated, user } = useSelector((state) => state.auth);
+    const { isAuthenticated, user, accessToken } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
@@ -17,17 +17,19 @@ const Header = () => {
         localStorage.getItem('theme') ||
         document.body.getAttribute('data-bs-theme') || 'light'
     );
+        
+    // Загрузка профиля при наличии токена
+    useEffect(() => {
+        if (accessToken && !user) {
+            dispatch(fetchUserProfile());
+        }
+    }, [accessToken, user, dispatch]);
+
 
     useEffect(() => {
         document.body.setAttribute('data-bs-theme', theme);
         localStorage.setItem('theme', theme);
     }, [theme]);
-
-
-    const handleLogout = () => {
-        dispatch(logout());
-        navigate('/');
-    };
 
     const handleHomeClick = (e) => {
         e.preventDefault();
@@ -37,7 +39,6 @@ const Header = () => {
             navigate('/');
         }
     };
-
 
     const handleLogoClick = (e) => {
         e.preventDefault();

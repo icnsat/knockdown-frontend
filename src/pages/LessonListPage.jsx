@@ -84,7 +84,7 @@ const LessonListPage = () => {
             <Header />
             
             <Container className="flex-grow-1 py-4">
-                <h1 className="mb-4">Список уроков</h1>
+                {/* <h1 className="mb-4">Список уроков</h1> */}
                 
                 {!isAuthenticated && (
                     <Alert variant="info" className="mb-4">

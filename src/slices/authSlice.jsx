@@ -17,7 +17,7 @@ export const registerUser = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
     'auth/login',
-    async ({ username, password }, { rejectWithValue, dispatch }) => {
+    async ({ username, password }, { rejectWithValue }) => {
         try {
             // 1. Получаем токены
             const response = await api.post('/auth/jwt/create/', {
@@ -84,28 +84,20 @@ const loadInitialState = () => {
     const accessToken = localStorage.getItem('accessToken');
     const refreshToken = localStorage.getItem('refreshToken');
 
-    if (isTokenValid(accessToken)) {
-        try {
-            const decoded = jwtDecode(accessToken);
-            return {
-                accessToken,
-                refreshToken,
-                user: {
-                    id: decoded.user_id,
-                    // username и email пока неизвестны - загрузятся позже через fetchUserProfile
-                },
-                isAuthenticated: true,
-                isLoading: false,
-                error: null,
-            };
-        } catch {
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
-        }
-    } else {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
+    if (accessToken && isTokenValid(accessToken)) {
+            // const decoded = jwtDecode(accessToken);
+        return {
+            accessToken,
+            refreshToken,
+            user: null,
+            isAuthenticated: true,
+            isLoading: true,
+            error: null,
+        };
     }
+
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
 
     return {
         accessToken: null,
@@ -126,6 +118,8 @@ const authSlice = createSlice({
             state.refreshToken = null;
             state.user = null;
             state.isAuthenticated = false;
+            state.isLoading = false;
+            state.error = null;
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
         },
@@ -148,6 +142,7 @@ const authSlice = createSlice({
                 state.isLoading = false;
                 state.error = action.payload;
             })
+
             // Login
             .addCase(loginUser.pending, (state) => {
                 state.isLoading = true;
@@ -166,16 +161,24 @@ const authSlice = createSlice({
                 state.error = action.payload;
                 state.isAuthenticated = false;
             })
+
             // Fetch profile
+            .addCase(fetchUserProfile.pending, (state) => {
+                state.isLoading = true;
+            })
             .addCase(fetchUserProfile.fulfilled, (state, action) => {
+                state.isLoading = false;
                 state.user = action.payload;
             })
             .addCase(fetchUserProfile.rejected, (state) => {
                 // Если профиль не загрузился - возможно токен невалидный
+                state.isLoading = false;
                 state.isAuthenticated = false;
+                state.user = null;
                 state.accessToken = null;
                 localStorage.removeItem('accessToken');
             })
+            
             // Update profile
             .addCase(updateUserProfile.pending, (state) => {
                 state.isLoading = true;

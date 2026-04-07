@@ -556,6 +556,7 @@ const LessonPage = () => {
                         <Badge
                             bg={null}
                             style={{ 
+                                fontSize: '1rem',
                                 backgroundColor: isGeneratedLesson ? '#8c6e98' : '#eecde4',
                                 color: isGeneratedLesson ? '#ffffff' : '#000000'
                             }}

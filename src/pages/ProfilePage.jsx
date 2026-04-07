@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchUserProfile, updateUserProfile } from '../slices/authSlice';
+import { useNavigate } from 'react-router-dom';
+import { fetchUserProfile, updateUserProfile, logout } from '../slices/authSlice';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import api from '../api/api';
 
 const ProfilePage = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { user, isLoading } = useSelector((state) => state.auth);
     
     const [formData, setFormData] = useState({
@@ -79,6 +81,11 @@ const ProfilePage = () => {
         }
     };
 
+    const handleLogout = () => {
+        dispatch(logout());
+        navigate('/');
+    };
+
     if (isLoading) {
         return (
             <>
@@ -97,7 +104,7 @@ const ProfilePage = () => {
             <Header />
             
             <Container className="flex-grow-1 py-4">
-                <h1 className="mb-4">Мой профиль</h1>
+                {/* <h1 className="mb-4">Мой профиль</h1> */}
                 
                 <Row>
                     {/* Левая колонка - настройки профиля */}
@@ -221,6 +228,16 @@ const ProfilePage = () => {
                                         </div>
                                     )}
                                 </Form>
+
+                                {/* Кнопка выхода */}
+                                <hr className="my-4" />
+                                <Button 
+                                    variant="danger" 
+                                    className="w-100"
+                                    onClick={handleLogout}
+                                >
+                                    Выйти из аккаунта
+                                </Button>
                             </Card.Body>
                         </Card>
                     </Col>
@@ -264,14 +281,14 @@ const ProfilePage = () => {
                             </Card.Body>
                         </Card>
                         
-                        <Card className="shadow-sm">
+                        {/* <Card className="shadow-sm">
                             <Card.Body>
                                 <Card.Title>Недавние достижения</Card.Title>
                                 <div className="text-center py-4 text-muted">
                                     В разработке...
                                 </div>
                             </Card.Body>
-                        </Card>
+                        </Card> */}
                     </Col>
                 </Row>
             </Container>

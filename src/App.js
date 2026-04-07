@@ -3,9 +3,11 @@ import { Container } from 'react-bootstrap';
 
 import { Provider } from 'react-redux';
 import { store } from './app/store';
-import LessonPage from './pages/LessonPage'
-import LessonListPage from './pages/LessonListPage'
-import AuthPage from './pages/AuthPage'
+import LessonPage from './pages/LessonPage';
+import LessonListPage from './pages/LessonListPage';
+import AuthPage from './pages/AuthPage';
+import ProfilePage from './pages/ProfilePage';
+import StatsPage from './pages/StatsPage';
 
 
 function App() {
@@ -15,7 +17,7 @@ function App() {
                 <BrowserRouter>
                     {/* <Header /> */}
 					<Routes>
-                        {/* Главная страница (без ID) - случайные/генерация */}
+                        {/* Главная страница (без ID) - случайные уроки/генерация */}
                         <Route path="/" element={<LessonPage />}></Route>
                     	
 
@@ -24,10 +26,18 @@ function App() {
 
                         {/* Системные уроки по ID */}
                         <Route path="/lesson/:lessonId" element={<LessonPage />} />
+
+                        {/* Вся статистика пользователя */}
+                        <Route path="/stats" element={<StatsPage />} />
                         
                         {/* Аутентификация */}
                         <Route path="/auth" element={<AuthPage />} />
+
                         {/* <Route path="/register" element={<AuthPage />} /> */}
+
+                        {/* Профиль пользователя */}
+                        <Route path="/profile" element={<ProfilePage />} />
+
 
 						{/*
 						<Route path="/registration" element={<Registration />}></Route>
