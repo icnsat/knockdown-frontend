@@ -513,7 +513,7 @@ const LessonPage = () => {
             <Container className="flex-grow-1 py-4">
                 {/* Информационная карточка для неавторизованных на главной */}
                 {!lessonId && !isAuthenticated && !sessionStats && (
-                    <Card className="mb-4 bg-light">
+                    <Card className="mb-4 bg-light border-0">
                         <Card.Body>
                             <Row className="align-items-center">
                                 <Col md={8}>
@@ -527,17 +527,17 @@ const LessonPage = () => {
                                 </Col>
                                 <Col md={4} className="text-end">
                                     <button 
-                                        className="btn btn-primary me-2"
-                                        onClick={() => navigate('/login')}
+                                        className="btn btn-warning me-2"
+                                        onClick={() => navigate('/auth')}
                                     >
                                         Войти
                                     </button>
-                                    <button 
+                                    {/* <button 
                                         className="btn btn-outline-primary"
                                         onClick={() => navigate('/register')}
                                     >
                                         Регистрация
-                                    </button>
+                                    </button> */}
                                 </Col>
                             </Row>
                         </Card.Body>

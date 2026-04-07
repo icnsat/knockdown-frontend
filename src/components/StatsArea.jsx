@@ -1,4 +1,4 @@
-import { Card, Row, Col, Table, ProgressBar } from 'react-bootstrap';
+import { Card, Row, Col, Table, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 const StatsArea = ({ stats, isAuthenticated }) => {
@@ -30,11 +30,11 @@ const StatsArea = ({ stats, isAuthenticated }) => {
     const fastestLetter = lettersBySpeed[0];
     const slowestLetter = lettersBySpeed[lettersBySpeed.length - 1];
 
-    // Данные для графиков
-    const speedData = [
-        { label: 'Текущая', value: stats.speed, max: 200 },
-        { label: 'Цель', value: 100, max: 200 }
-    ];
+    // // Данные для графиков
+    // const speedData = [
+    //     { label: 'Текущая', value: stats.speed, max: 200 },
+    //     { label: 'Цель', value: 100, max: 200 }
+    // ];
 
     // Форматирование времени
     const formatTime = (ms) => {
@@ -49,38 +49,50 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                     Результаты тренировки
                 </Card.Title>
 
-                {/* Основные метрики */}
-                <Row className="mb-4 text-center">
+                {/* 1. Основные метрики */}
+                <Row className="align-items-stretch mb-4">
                     <Col md={3}>
-                        <div className="p-3 bg-light rounded">
-                            <h1 className="text-primary display-4">{stats.speed}</h1>
-                            <p className="text-muted mb-0">зн/мин</p>
-                        </div>
+                        <Card
+                            className="h-100 text-white text-center p-3"
+                            style={{ backgroundColor: '#4F849D' }}
+                        >
+                            <h2>{stats.speed}</h2>
+                            <p className="mb-0">зн/мин</p>
+                        </Card>
                     </Col>
                     <Col md={3}>
-                        <div className="p-3 bg-light rounded">
-                            <h1 className="text-success display-4">{stats.accuracy}%</h1>
-                            <p className="text-muted mb-0">точность</p>
-                        </div>
+                        <Card
+                            className="h-100 text-white text-center p-3"
+                            style={{ backgroundColor: '#37AAAB' }}
+                        >
+                            <h2>{stats.accuracy}%</h2>
+                            <p className="mb-0">точность</p>
+                        </Card>
                     </Col>
                     <Col md={3}>
-                        <div className="p-3 bg-light rounded">
-                            <h1 className="text-info display-4">{stats.duration}с</h1>
-                            <p className="text-muted mb-0">время</p>
-                        </div>
+                        <Card
+                            className="h-100 text-white text-center p-3"
+                            style={{ backgroundColor: '#C87DA8' }}
+                        >
+                            <h2>{stats.duration}с</h2>
+                            <p className="mb-0">время</p>
+                        </Card>
                     </Col>
                     <Col md={3}>
-                        <div className="p-3 bg-light rounded">
-                            <h1 className="text-warning display-4">{stats.totalMistakes || stats.errors}</h1>
-                            <p className="text-muted mb-0">всего ошибок</p>
-                        </div>
+                        <Card
+                            className="h-100 text-white text-center p-3"
+                            style={{ backgroundColor: '#8c6e98' }}
+                        >
+                            <h2>{stats.totalMistakes || stats.errors}</h2>
+                            <p className="mb-0">всего ошибок</p>
+                        </Card>
                     </Col>
                 </Row>
 
-                {/* Блок с временем реакции */}
+                {/* 2. Блок с временем реакции */}
                 <Row className="mb-4">
                     <Col md={6}>
-                        <Card className="bg-light border-0">
+                        <Card className="bg-light border-0 h-100">
                             <Card.Body>
                                 <h5>⏱️ Среднее время нажатия</h5>
                                 {fastestLetter && (
@@ -103,7 +115,7 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                         </Card>
                     </Col>
                     <Col md={6}>
-                        <Card className="bg-light border-0">
+                        <Card className="bg-light border-0 h-100">
                             <Card.Body>
                                 <h5>📊 Общее время</h5>
                                 <div className="d-flex justify-content-between mb-2">
@@ -122,7 +134,7 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                 </Row>
 
                 {/* Графики */}
-                <Row className="mb-4">
+                {/* <Row className="mb-4">
                     <Col md={6}>
                         <h5>Скорость</h5>
                         {speedData.map((item, idx) => (
@@ -169,9 +181,9 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                             </div>
                         </div>
                     </Col>
-                </Row>
+                </Row> */}
 
-                {/* Блок для неавторизованных */}
+                {/* 3. Блок для неавторизованных */}
                 {!isAuthenticated && (
                     <div className="text-center p-4 mb-4 bg-light rounded">
                         <h5 className="text-secondary mb-3">
@@ -182,21 +194,21 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                             и вы могли отслеживать прогресс со временем!
                         </p>
                         <div className="d-flex justify-content-center gap-3">
-                            <Link to="/login" className="btn btn-primary">
+                            <Link to="/auth" className="btn btn-primary" style={{ backgroundColor: '#4F849D', border: 'none' }}>
                                 Войти
                             </Link>
-                            <Link to="/register" className="btn btn-outline-primary">
+                            {/* <Link to="/register" className="btn btn-outline-secondary">
                                 Регистрация
-                            </Link>
+                            </Link> */}
                         </div>
                     </div>
                 )}
 
-                {/* Детальная статистика */}
+                {/* 4. Детальная статистика (проблемные буквы и биграммы) */}
                 <Row className="mt-4">
                     <Col md={6}>
-                        <h5>Проблемные буквы</h5>
-                        <Table hover size="sm">
+                        <h5 className="text-center">🔤 Проблемные буквы</h5>
+                        <Table hover size="sm" className="mt-2">
                             <thead>
                                 <tr>
                                     <th>Буква</th>
@@ -206,23 +218,31 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {topLetters.map(([letter, data]) => (
-                                    <tr key={letter}>
-                                        <td><strong>{displayChar(letter)}</strong></td>
-                                        <td>{data.errors}/{data.occurrences}</td>
-                                        <td>
-                                            {Math.round((data.errors / data.occurrences) * 100)}%
-                                        </td>
-                                        <td>{formatTime(data.avgTime)}</td>
-                                    </tr>
-                                ))}
+                                {topLetters.map(([letter, data]) => {
+                                    const errorPercent = Math.round((data.errors / data.occurrences) * 100);
+                                    return (
+                                        <tr key={letter}>
+                                            <td><strong>{displayChar(letter)}</strong></td>
+                                            <td>{data.errors}/{data.occurrences}</td>
+                                            <td>
+                                                <Badge
+                                                    bg={null}
+                                                    style={{ backgroundColor: errorPercent > 15 ? '#dd5132' : '#e6a026' }}
+                                                >
+                                                    {errorPercent}%
+                                                </Badge>
+                                            </td>
+                                            <td>{formatTime(data.avgTime)}</td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </Table>
                     </Col>
                     
                     <Col md={6}>
-                        <h5>Проблемные биграммы</h5>
-                        <Table hover size="sm">
+                        <h5 className="text-center">🔗 Проблемные биграммы</h5>
+                        <Table hover size="sm" className="mt-2">
                             <thead>
                                 <tr>
                                     <th>Биграмма</th>
@@ -232,25 +252,33 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {topBigrams.map(([bigram, data]) => (
-                                    <tr key={bigram}>
-                                        <td><strong>{displayBigram(bigram)}</strong></td>
-                                        <td>{data.errors}/{data.occurrences}</td>
-                                        <td>
-                                            {Math.round((data.errors / data.occurrences) * 100)}%
-                                        </td>
-                                        <td>{formatTime(data.avgTime)}</td>
-                                    </tr>
-                                ))}
+                                {topBigrams.map(([bigram, data]) => {
+                                    const errorPercent = Math.round((data.errors / data.occurrences) * 100);
+                                    return (
+                                        <tr key={bigram}>
+                                            <td><strong>{displayBigram(bigram)}</strong></td>
+                                            <td>{data.errors}/{data.occurrences}</td>
+                                            <td>
+                                                <Badge
+                                                    bg={null}
+                                                    style={{ backgroundColor: errorPercent > 20 ? '#dd5132' : '#e6a026' }}
+                                                >
+                                                    {errorPercent}%
+                                                </Badge>
+                                            </td>
+                                            <td>{formatTime(data.avgTime)}</td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </Table>
                     </Col>
                 </Row>
 
-                {/* Дополнительная информация */}
+                {/* 5. Дополнительная информация */}
                 <Row className="mt-3">
                     <Col md={12}>
-                        <div className="text-muted small">
+                        <div className="text-muted small text-center">
                             <p className="mb-1">
                                 <strong>Всего нажатий:</strong> {stats.keystrokes?.length || 0} | 
                                 <strong> Уникальных букв:</strong> {Object.keys(stats.letterStats || {}).length} | 

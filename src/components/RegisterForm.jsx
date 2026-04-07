@@ -134,7 +134,7 @@ const RegisterForm = ({ onSuccess }) => {
                 </Form.Control.Feedback>
             </Form.Group>
             {error && (
-                <Alert variant="danger" className="mt-3">
+                <Alert variant="danger" className="mt-3 border-0">
                     {typeof error === 'string' ? error : 'Ошибка регистрации'}
                 </Alert>
             )}

@@ -60,7 +60,7 @@ const StatsPage = () => {
                     <Alert variant="warning">
                         <Alert.Heading>🔐 Требуется авторизация</Alert.Heading>
                         <p>Войдите в аккаунт для просмотра статистики</p>
-                        <Button as={Link} to="/auth" variant="primary">Войти</Button>
+                        <Button as={Link} to="/auth" variant="outline-dark">Войти</Button>
                     </Alert>
                 </Container>
                 <Footer />

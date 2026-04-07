@@ -87,13 +87,27 @@ const LessonListPage = () => {
                 {/* <h1 className="mb-4">Список уроков</h1> */}
                 
                 {!isAuthenticated && (
-                    <Alert variant="info" className="mb-4">
-                        <Alert.Heading className="fs-5">🔐 Отслеживайте свой прогресс</Alert.Heading>
-                        <p className="mb-0">
-                            Войдите в аккаунт, чтобы видеть свой прогресс по урокам 
-                            и получать персонализированные рекомендации!
-                        </p>
-                    </Alert>
+                    <Card className="mb-4 bg-light border-0">
+                        <Card.Body>
+                            <Row className="align-items-center">
+                                <Col md={8}>
+                                    <h5>🔐 Отслеживайте свой прогресс</h5>
+                                    <p className="mb-0 text-muted">
+                                        Войдите в аккаунт, чтобы видеть свой прогресс по урокам 
+                                        и получать персонализированные рекомендации!
+                                    </p>
+                                </Col>
+                                <Col md={4} className="text-end">
+                                    <button 
+                                        className="btn btn-warning me-2"
+                                        onClick={() => navigate('/auth')}
+                                    >
+                                        Войти
+                                    </button>
+                                </Col>
+                            </Row>
+                        </Card.Body>
+                    </Card>
                 )}
 
                 <Row xs={1} md={2} lg={3} className="g-4">

@@ -82,7 +82,7 @@ const LoginForm = ({ onSuccess }) => {
             </Form.Group>
 
             {error && (
-                <Alert variant="danger" className="mt-3">
+                <Alert variant="danger" className="mt-3 border-0">
                     {typeof error === 'string' ? error : 'Неверный логин или пароль'}
                 </Alert>
             )}
