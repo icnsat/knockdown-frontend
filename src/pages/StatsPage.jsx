@@ -11,7 +11,8 @@ import api from '../api/api';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend);
 
 const StatsPage = () => {
-    const { isAuthenticated, user } = useSelector((state) => state.auth);
+    const { isAuthenticated } = useSelector((state) => state.auth);
+    // const { isAuthenticated, user } = useSelector((state) => state.auth);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     
@@ -21,7 +22,7 @@ const StatsPage = () => {
     const [recentSessions, setRecentSessions] = useState([]);
     const [letterStats, setLetterStats] = useState([]);
     const [bigramStats, setBigramStats] = useState([]);
-    const [allSessions, setAllSessions] = useState([]);
+    // const [allSessions, setAllSessions] = useState([]);
 
     useEffect(() => {
         if (!isAuthenticated) return;
@@ -41,7 +42,7 @@ const StatsPage = () => {
                 setRecentSessions(sessionsRes.data);
                 setLetterStats(lettersRes.data);
                 setBigramStats(bigramsRes.data);
-                setAllSessions(sessionsRes.data);
+                // setAllSessions(sessionsRes.data);
             } catch (err) {
                 setError('Не удалось загрузить статистику');
             } finally {

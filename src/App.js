@@ -3,6 +3,8 @@ import { Container } from 'react-bootstrap';
 
 import { Provider } from 'react-redux';
 import { store } from './app/store';
+import ProtectedRoute from './components/ProtectedRoute';
+
 import LessonPage from './pages/LessonPage';
 import LessonListPage from './pages/LessonListPage';
 import AuthPage from './pages/AuthPage';
@@ -15,64 +17,27 @@ function App() {
 		<Provider store={store}>
             <Container className="col-lg-10 mx-auto p-4 py-md-5">
                 <BrowserRouter>
-                    {/* <Header /> */}
 					<Routes>
                         {/* Главная страница (без ID) - случайные уроки/генерация */}
                         <Route path="/" element={<LessonPage />}></Route>
                     	
-
                         {/* Список всех уроков */}
                         <Route path="/lessons" element={<LessonListPage />} />
 
                         {/* Системные уроки по ID */}
                         <Route path="/lesson/:lessonId" element={<LessonPage />} />
 
-                        {/* Вся статистика пользователя */}
+                        {/* Полная статистика пользователя */}
                         <Route path="/stats" element={<StatsPage />} />
                         
                         {/* Аутентификация */}
                         <Route path="/auth" element={<AuthPage />} />
 
-                        {/* <Route path="/register" element={<AuthPage />} /> */}
-
-                        {/* Профиль пользователя */}
-                        <Route path="/profile" element={<ProfilePage />} />
-
-
-						{/*
-						<Route path="/registration" element={<Registration />}></Route>
-                        <Route path="/login" element={<Login />}></Route>                         
-						<Route path="/books" element={<BooksPage />}></Route>
-                        <Route path="/books/:bookId" element={<BookDetailsPage />}></Route>
-
-
-                        <Route path="/bookshelf" element={
-                            <ProtectedRoute allowedRoles={['user']}>
-                                <BookshelfPage />
-                            </ProtectedRoute>
-                        }></Route>
-
-                        <Route path="/bookshelf/:bookshelfId" element={
-                            <ProtectedRoute allowedRoles={['user']}>
-                                <BookshelfDetailsPage />
-                            </ProtectedRoute>
-                        }></Route>
-
-
-                        <Route path="/admin/tags" element={
-                            <ProtectedRoute allowedRoles={['admin']}>
-                                <AdminTagsPage />
-                            </ProtectedRoute>
-                        }></Route>
-
-                        <Route path="/admin/books" element={
-                            <ProtectedRoute allowedRoles={['admin']}>
-                                <AdminBooksPage />
-                            </ProtectedRoute>
-                        }></Route>
-						*/}
+                        {/* Защищённые маршруты */}
+                        <Route element={<ProtectedRoute />}>
+                            <Route path="/profile" element={<ProfilePage />} />
+                        </Route>
                     </Routes>
-
                 </BrowserRouter>
             </Container>
         </Provider>

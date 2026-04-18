@@ -36,87 +36,6 @@ const TypingArea = ({ lesson, onComplete }) => {
         }
     };
 
-    // Обработчик нажатий клавиш
-    const handleKeyDown = useCallback((e) => {
-        if (isCompleted) return;
-
-        // Игнорируем специальные клавиши
-        if (e.key === 'Shift' || e.key === 'Control' || e.key === 'Alt' || 
-            e.key === 'Meta' || e.key === 'CapsLock' || e.key === 'Tab' ||
-            e.key === 'Escape') {
-            return;
-        }
-
-        e.preventDefault();
-
-        // Засекаем время первого нажатия
-        if (!startTime && e.key.length === 1) {
-            setStartTime(Date.now());
-        }
-
-        // Обработка Backspace
-        if (e.key === 'Backspace') {
-            if (userInput.length > 0) {
-                const lastPos = userInput.length - 1;
-                
-                // Удаляем последний символ
-                setUserInput(prev => prev.slice(0, -1));
-                
-                // Удаляем последнее нажатие
-                setKeystrokes(prev => prev.slice(0, -1));
-            }
-            return;
-        }
-
-        // Обрабатываем только печатные символы
-        if (e.key.length === 1 && userInput.length < targetText.length) {
-            const currentPos = userInput.length;
-            const expectedChar = targetText[currentPos];
-            const pressedKey = e.key;
-
-            const isError = pressedKey !== expectedChar;
-
-
-            const currentTimestamp = Date.now();
-
-            // Вычисляем время нажатия (интервал с предыдущим нажатием)
-            let hitTime = 0;
-            if (keystrokes.length > 0) {
-                const prevKeystroke = keystrokes[keystrokes.length - 1];
-                hitTime = currentTimestamp - prevKeystroke.timestamp;
-            }
-
-            // Сохраняем информацию о нажатии
-            const newKeystroke = {
-                expected: expectedChar,
-                actual: pressedKey,
-                position: currentPos,
-                timestamp: currentTimestamp,
-                hitTime: hitTime, // добавляем время нажатия
-                correct: !isError
-            };
-
-            setKeystrokes(prev => [...prev, newKeystroke]);
-
-            if (isError) {
-                setErrorPositions(prev => new Set(prev).add(currentPos));
-                setErrorHistory(prev => [...prev, {
-                    position: currentPos,
-                    expected: expectedChar,
-                    actual: pressedKey,
-                    timestamp: currentTimestamp
-                }]);
-            }
-
-            setUserInput(prev => prev + pressedKey);
-
-            // Проверка завершения
-            if (currentPos + 1 === targetText.length) {
-                completeLesson();
-            }
-        }
-    }, [userInput, startTime, targetText, isCompleted, keystrokes]);
-
     // Завершение урока
     const completeLesson = useCallback(() => {
         if (isCompleted) return;
@@ -227,10 +146,92 @@ const TypingArea = ({ lesson, onComplete }) => {
             errorHistory,
             letterStats,      // теперь содержит avgTime для каждой буквы
             bigramStats,
-            bigramStats,
             keystrokes        // содержит hitTime для каждого нажатия
         });
     }, [startTime, characters, errorPositions, errorHistory, keystrokes, targetText, onComplete, isCompleted]);
+
+
+    // Обработчик нажатий клавиш
+    const handleKeyDown = useCallback((e) => {
+        if (isCompleted) return;
+
+        // Игнорируем специальные клавиши
+        if (e.key === 'Shift' || e.key === 'Control' || e.key === 'Alt' || 
+            e.key === 'Meta' || e.key === 'CapsLock' || e.key === 'Tab' ||
+            e.key === 'Escape') {
+            return;
+        }
+
+        e.preventDefault();
+
+        // Засекаем время первого нажатия
+        if (!startTime && e.key.length === 1) {
+            setStartTime(Date.now());
+        }
+
+        // Обработка Backspace
+        if (e.key === 'Backspace') {
+            if (userInput.length > 0) {
+                // const lastPos = userInput.length - 1;
+                
+                // Удаляем последний символ
+                setUserInput(prev => prev.slice(0, -1));
+                
+                // Удаляем последнее нажатие
+                setKeystrokes(prev => prev.slice(0, -1));
+            }
+            return;
+        }
+
+        // Обрабатываем только печатные символы
+        if (e.key.length === 1 && userInput.length < targetText.length) {
+            const currentPos = userInput.length;
+            const expectedChar = targetText[currentPos];
+            const pressedKey = e.key;
+
+            const isError = pressedKey !== expectedChar;
+
+
+            const currentTimestamp = Date.now();
+
+            // Вычисляем время нажатия (интервал с предыдущим нажатием)
+            let hitTime = 0;
+            if (keystrokes.length > 0) {
+                const prevKeystroke = keystrokes[keystrokes.length - 1];
+                hitTime = currentTimestamp - prevKeystroke.timestamp;
+            }
+
+            // Сохраняем информацию о нажатии
+            const newKeystroke = {
+                expected: expectedChar,
+                actual: pressedKey,
+                position: currentPos,
+                timestamp: currentTimestamp,
+                hitTime: hitTime, // добавляем время нажатия
+                correct: !isError
+            };
+
+            setKeystrokes(prev => [...prev, newKeystroke]);
+
+            if (isError) {
+                setErrorPositions(prev => new Set(prev).add(currentPos));
+                setErrorHistory(prev => [...prev, {
+                    position: currentPos,
+                    expected: expectedChar,
+                    actual: pressedKey,
+                    timestamp: currentTimestamp
+                }]);
+            }
+
+            setUserInput(prev => prev + pressedKey);
+
+            // Проверка завершения
+            if (currentPos + 1 === targetText.length) {
+                completeLesson();
+            }
+        }
+    }, [userInput, startTime, targetText, isCompleted, keystrokes, completeLesson]);
+
 
     // Добавляем обработчик при монтировании
     useEffect(() => {

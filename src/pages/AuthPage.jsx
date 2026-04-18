@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Container, Row, Col, Card, Nav, Alert } from 'react-bootstrap';
+import { Col, Card, Nav, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';

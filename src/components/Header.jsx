@@ -1,7 +1,8 @@
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout, fetchUserProfile } from '../slices/authSlice';
+import { fetchUserProfile } from '../slices/authSlice';
+// import { logout } from '../slices/authSlice';
 import { useState, useEffect } from 'react';
 
 import iconLight from '../assets/logo192.png';
