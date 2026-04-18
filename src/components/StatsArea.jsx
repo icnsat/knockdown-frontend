@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 const StatsArea = ({ stats, isAuthenticated }) => {
     // Функция для отображения пробелов как ␣
     const decodeLetter = (letter) => {
-        return letter === '\\s' ? '␣' : letter;
+        return letter === ' ' ? '␣' : letter;
     };
 
     // Функция для отображения биграмм с пробелами как ␣
     const decodeBigram = (bigram) => {
-        return bigram.replace(/\\s/g, '␣');
+        return bigram.replace(/ /g, '␣');
     };
 
     // Сортировка букв: сначала по проценту ошибок, потом по времени
