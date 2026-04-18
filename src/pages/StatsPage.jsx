@@ -130,14 +130,14 @@ const StatsPage = () => {
     const progressChartOptions = {
         responsive: true,
         interaction: { mode: 'index', intersect: false },
-        plugins: {
-            legend: { position: 'top' },
-            title: { 
-                display: true,
-                text: 'Динамика прогресса по дням',
-                font: { size: 20 }
-            }
-        },
+        // plugins: {
+        //     legend: { position: 'top' },
+        //     title: { 
+        //         display: true,
+        //         text: 'Динамика прогресса по дням',
+        //         font: { size: 20 }
+        //     }
+        // },
         scales: {
             y: { title: { display: true, text: 'Скорость (зн/мин)' }, beginAtZero: true },
             y1: { title: { display: true, text: 'Точность (%)' }, position: 'right', beginAtZero: true, max: 100 }
@@ -171,14 +171,14 @@ const StatsPage = () => {
     const sessionChartOptions = {
         responsive: true,
         interaction: { mode: 'index', intersect: false },
-        plugins: {
-            legend: { position: 'top' },
-            title: { 
-                display: true,
-                text: 'Динамика прогресса по последним тренировкам',
-                font: { size: 20 }
-            }
-        },
+        // plugins: {
+        //     legend: { position: 'top' },
+        //     title: { 
+        //         display: true,
+        //         text: 'Динамика прогресса по последним тренировкам',
+        //         font: { size: 20 }
+        //     }
+        // },
         scales: {
             x: { title: { display: true, text: 'Номер тренировки' } },
             y: { title: { display: true, text: 'Скорость (зн/мин)' }, beginAtZero: true },
@@ -263,6 +263,7 @@ const StatsPage = () => {
                 {dailyStats.length > 0 && (
                     <Card className="shadow-sm mb-4">
                         <Card.Body>
+                            <Card.Title className="text-center">Динамика прогресса по дням</Card.Title>
                             <Line data={progressChartData} options={progressChartOptions} />
                         </Card.Body>
                     </Card>
@@ -272,6 +273,7 @@ const StatsPage = () => {
                 {recentSessions.length > 2 && (
                     <Card className="shadow-sm mb-4">
                         <Card.Body>
+                            <Card.Title className="text-center">Динамика прогресса по последним тренировкам</Card.Title>
                             <Line data={sessionChartData} options={sessionChartOptions} />
                             {/* <div className="text-muted small text-center mt-2">
                                 Каждая точка — одна тренировка. Показывает динамику улучшений от занятия к занятию.
