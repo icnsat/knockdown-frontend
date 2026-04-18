@@ -3,23 +3,39 @@ import { Link } from 'react-router-dom';
 
 const StatsArea = ({ stats, isAuthenticated }) => {
     // Функция для отображения пробелов как ␣
-    const displayChar = (char) => {
-        return char === '\\s' ? '␣' : char;
+    const decodeLetter = (letter) => {
+        return letter === '\\s' ? '␣' : letter;
     };
 
     // Функция для отображения биграмм с пробелами как ␣
-    const displayBigram = (bigram) => {
+    const decodeBigram = (bigram) => {
         return bigram.replace(/\\s/g, '␣');
     };
 
-    // Сортируем буквы по проценту ошибок
+    // Сортировка букв: сначала по проценту ошибок (по убыванию), потом по скорости (по возрастанию)
     const topLetters = Object.entries(stats.letterStats || {})
-        .sort((a, b) => (b[1].errors / b[1].occurrences) - (a[1].errors / a[1].occurrences))
+        .sort((a, b) => {
+            const errorA = a[1].errors / a[1].occurrences;
+            const errorB = b[1].errors / b[1].occurrences;
+            
+            if (errorA !== errorB) {
+                return errorB - errorA; // по ошибкам (сначала больше)
+            }
+            return a[1].avgTime - b[1].avgTime; // по скорости (сначала медленнее)
+        })
         .slice(0, 5);
 
-    // Сортируем биграммы по проценту ошибок
+    // Сортировка биграмм: сначала по проценту ошибок (по убыванию), потом по времени (по возрастанию)
     const topBigrams = Object.entries(stats.bigramStats || {})
-        .sort((a, b) => (b[1].errors / b[1].occurrences) - (a[1].errors / a[1].occurrences))
+        .sort((a, b) => {
+            const errorA = a[1].errors / a[1].occurrences;
+            const errorB = b[1].errors / b[1].occurrences;
+            
+            if (errorA !== errorB) {
+                return errorB - errorA; // по ошибкам (сначала больше)
+            }
+            return a[1].avgTime - b[1].avgTime; // по времени (сначала медленнее)
+        })
         .slice(0, 5);
 
     // Находим самую быструю и самую медленную букву
@@ -99,7 +115,7 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                                     <div className="d-flex justify-content-between mb-2">
                                         <span>Самая быстрая буква:</span>
                                         <span>
-                                            <strong>"{displayChar(fastestLetter[0])}"</strong> — {formatTime(fastestLetter[1].avgTime)}
+                                            <strong>"{decodeLetter(fastestLetter[0])}"</strong> — {formatTime(fastestLetter[1].avgTime)}
                                         </span>
                                     </div>
                                 )}
@@ -107,7 +123,7 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                                     <div className="d-flex justify-content-between">
                                         <span>Самая медленная буква:</span>
                                         <span>
-                                            <strong>"{displayChar(slowestLetter[0])}"</strong> — {formatTime(slowestLetter[1].avgTime)}
+                                            <strong>"{decodeLetter(slowestLetter[0])}"</strong> — {formatTime(slowestLetter[1].avgTime)}
                                         </span>
                                     </div>
                                 )}
@@ -222,7 +238,7 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                                     const errorPercent = Math.round((data.errors / data.occurrences) * 100);
                                     return (
                                         <tr key={letter}>
-                                            <td><strong>{displayChar(letter)}</strong></td>
+                                            <td><strong>{decodeLetter(letter)}</strong></td>
                                             <td>{data.errors}/{data.occurrences}</td>
                                             <td>
                                                 <Badge
@@ -256,7 +272,7 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                                     const errorPercent = Math.round((data.errors / data.occurrences) * 100);
                                     return (
                                         <tr key={bigram}>
-                                            <td><strong>{displayBigram(bigram)}</strong></td>
+                                            <td><strong>{decodeBigram(bigram)}</strong></td>
                                             <td>{data.errors}/{data.occurrences}</td>
                                             <td>
                                                 <Badge

@@ -102,7 +102,7 @@ const StatsPage = () => {
         );
     }
 
-    // Данные для графика прогресса
+    // Данные для графика прогресса по дням
     const progressChartData = {
         labels: dailyStats.map(item => item.date),
         datasets: [
@@ -144,6 +144,48 @@ const StatsPage = () => {
         }
     };
 
+    // Данные для графика прогресса по последним сессиям
+    const sessionsForChart = [...recentSessions].reverse(); // от первой к последней
+    const sessionChartData = {
+        labels: sessionsForChart.map((_, idx) => idx + 1), // номер сессии
+        datasets: [
+            {
+                label: 'Скорость (зн/мин)',
+                data: sessionsForChart.map(s => s.average_speed_wpm),
+                borderColor: '#37AAAB',
+                // backgroundColor: 'rgba(55, 170, 171, 0.1)',
+                tension: 0.3,
+                fill: true,
+            },
+            {
+                label: 'Точность (%)',
+                data: sessionsForChart.map(s => s.accuracy_percentage),
+                borderColor: '#4F849D',
+                // backgroundColor: 'rgba(200, 125, 168, 0.1)',
+                tension: 0.3,
+                fill: true,
+            }
+        ],
+    };
+
+    const sessionChartOptions = {
+        responsive: true,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+            legend: { position: 'top' },
+            title: { 
+                display: true,
+                text: 'Динамика прогресса по последним тренировкам',
+                font: { size: 20 }
+            }
+        },
+        scales: {
+            x: { title: { display: true, text: 'Номер тренировки' } },
+            y: { title: { display: true, text: 'Скорость (зн/мин)' }, beginAtZero: true },
+            y1: { title: { display: true, text: 'Точность (%)' }, position: 'right', beginAtZero: true, max: 100 }
+        }
+    };
+
     // Данные для круговой диаграммы (распределение по типам уроков)
     const lessonTypes = {};
     recentSessions.forEach(session => {
@@ -174,32 +216,32 @@ const StatsPage = () => {
                 {/* <h1 className="mb-4">Моя статистика</h1> */}
 
                 {/* 1. Ключевые метрики */}
-                <Row className="align-items-stretch mb-4">
-                    <Col md={3}>
+                <Row className="justify-content-between align-items-stretch mb-4">
+                    <Col md={2}>
                         <Card
                             className="h-100 text-white text-center p-3"
-                            style={{ backgroundColor: '#4F849D' }} 
+                            style={{ backgroundColor: '#37AAAB' }} 
                         >  
                             <h2>{dashboard?.total_sessions || 0}</h2><span>всего тренировок</span>
                         </Card>
                     </Col>
-                    <Col md={3}>
+                    <Col md={2}>
                         <Card
                             className="h-100 text-white text-center p-3"
-                            style={{ backgroundColor: '#37AAAB' }} 
+                            style={{ backgroundColor: '#4F849D' }} 
                         >
                             <h2>{dashboard?.total_time || 0} мин</h2><span>общее время</span>
                         </Card>
                     </Col>
-                    <Col md={3}>
+                    <Col md={2}>
                         <Card
                             className="h-100 text-white text-center p-3"
-                            style={{ backgroundColor: '#C87DA8' }}
+                            style={{ backgroundColor: '#6E799B' }}
                         >
                             <h2>{dashboard?.best_speed || 0}</h2><span>лучшая скорость</span>
                         </Card>
                     </Col>
-                    <Col md={3}>
+                    <Col md={2}>
                         <Card
                             className="h-100 text-white text-center p-3"
                             style={{ backgroundColor: '#8c6e98' }}
@@ -207,13 +249,33 @@ const StatsPage = () => {
                             <h2>{dashboard?.avg_speed || 0}</h2><span>средняя скорость</span>
                         </Card>
                     </Col>
+                    <Col md={2}>
+                        <Card
+                            className="h-100 text-white text-center p-3"
+                            style={{ backgroundColor: '#C87DA8' }}
+                        >
+                            <h2>{dashboard?.avg_accuracy || 0}</h2><span>средняя точность</span>
+                        </Card>
+                    </Col>
                 </Row>
 
-                {/* 2. График прогресса (скорость + точность) */}
+                {/* 2.1. График прогресса по дням (скорость + точность) */}
                 {dailyStats.length > 0 && (
                     <Card className="shadow-sm mb-4">
                         <Card.Body>
                             <Line data={progressChartData} options={progressChartOptions} />
+                        </Card.Body>
+                    </Card>
+                )}
+
+                {/* 2.2. График прогресса по сессиям (скорость + точность) */}
+                {recentSessions.length > 2 && (
+                    <Card className="shadow-sm mb-4">
+                        <Card.Body>
+                            <Line data={sessionChartData} options={sessionChartOptions} />
+                            {/* <div className="text-muted small text-center mt-2">
+                                Каждая точка — одна тренировка. Показывает динамику улучшений от занятия к занятию.
+                            </div> */}
                         </Card.Body>
                     </Card>
                 )}

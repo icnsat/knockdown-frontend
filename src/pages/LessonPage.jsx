@@ -1,292 +1,6 @@
-// import { useState, useEffect } from 'react';
-// import { useParams, useNavigate } from 'react-router-dom';
-// import { Container, Spinner, Alert, Row, Col, Card } from 'react-bootstrap';
-// import { useSelector } from 'react-redux';
-// import Header from '../components/Header';
-// import Footer from '../components/Footer';
-// import TypingArea from '../components/TypingArea';
-// import StatsArea from '../components/StatsArea';
-// import api from '../api/api';
-
-// const LessonPage = () => {
-//     const { lessonId } = useParams(); // для системных уроков: /lesson/1, /lesson/2
-//     const navigate = useNavigate();
-    
-//     const [lesson, setLesson] = useState(null);
-//     const [loading, setLoading] = useState(true);
-//     const [sessionStats, setSessionStats] = useState(null);
-//     const [savingStatus, setSavingStatus] = useState(null);
-//     const [error, setError] = useState(null);
-    
-//     const { isAuthenticated } = useSelector((state) => state.auth);
-
-//     // Загрузка урока
-//     useEffect(() => {
-//         const fetchLesson = async () => {
-//             setLoading(true);
-//             setError(null);
-            
-//             try {
-//                 let response;
-                
-//                 if (lessonId) {
-//                     // Случай 1: Системный урок по ID
-//                     console.log(`Загрузка системного урока ${lessonId}`);
-//                     response = await api.get(`/lessons/lessons/${lessonId}/`);
-//                 } else {
-//                     // Случай 2: Главная страница - генерация или случайный урок
-//                     console.log('Загрузка урока для главной страницы');
-                    
-//                     if (isAuthenticated) {
-//                         // Авторизован - генерируем персонализированный урок
-//                         response = await api.post('/lessons/generate/', {
-//                             type: 'auto'
-//                         });
-//                     } else {
-//                         // Не авторизован - случайный системный урок
-//                         // Получаем список уроков и берем случайный
-//                         const lessonsResponse = await api.get('/lessons/lessons/');
-//                         const lessons = lessonsResponse.data;
-                        
-//                         if (lessons.length > 0) {
-//                             const randomIndex = Math.floor(Math.random() * lessons.length);
-//                             const randomLessonId = lessons[randomIndex].id;
-//                             response = await api.get(`/lessons/lessons/${randomLessonId}/`);
-//                         } else {
-//                             throw new Error('Нет доступных уроков');
-//                         }
-//                     }
-//                 }
-                
-//                 setLesson(response.data);
-//             } catch (error) {
-//                 console.error('Ошибка загрузки урока:', error);
-//                 setError('Не удалось загрузить урок. Пожалуйста, попробуйте позже.');
-//             } finally {
-//                 setLoading(false);
-//             }
-//         };
-
-//         fetchLesson();
-//     }, [lessonId, isAuthenticated]); // Перезагружаем при изменении ID или статуса авторизации
-
-//     // Отправка статистики на бэкенд
-//     const sendStatsToBackend = async (stats) => {
-//         if (!isAuthenticated) {
-//             console.log('Пользователь не авторизован, статистика не сохраняется');
-//             return;
-//         }
-
-//         setSavingStatus('saving');
-
-//         try {
-//             const startTime = stats.keystrokes[0]?.timestamp || Date.now() - stats.duration * 1000;
-            
-//             const sessionData = {
-//                 lesson: lesson.id,
-//                 total_duration_seconds: stats.duration,
-//                 total_characters_typed: stats.characters,
-//                 total_errors: stats.errors,
-//                 average_speed_wpm: stats.speed,
-//                 accuracy_percentage: stats.accuracy,
-//                 started_at: new Date(startTime).toISOString(),
-//                 finished_at: new Date(Date.now()).toISOString(),
-                
-//                 letter_stats: Object.entries(stats.letterStats).map(([letter, data]) => ({
-//                     letter,
-//                     occurrences: data.occurrences,
-//                     errors: data.errors,
-//                     average_hit_time_ms: data.avgTime || 0
-//                 })),
-                
-//                 bigram_stats: Object.entries(stats.bigramStats).map(([bigram, data]) => ({
-//                     bigram,
-//                     occurrences: data.occurrences,
-//                     errors: data.errors,
-//                     average_transition_time_ms: data.avgTime || 0
-//                 }))
-//             };
-
-//             await api.post('/stats/sessions/', sessionData);
-//             setSavingStatus('saved');
-//             setTimeout(() => setSavingStatus(null), 3000);
-            
-//         } catch (error) {
-//             console.error('Ошибка при сохранении статистики:', error);
-//             setSavingStatus('error');
-//             setTimeout(() => setSavingStatus(null), 5000);
-//         }
-//     };
-
-//     const handleLessonComplete = (stats) => {
-//         setSessionStats(stats);
-//         sendStatsToBackend(stats);
-//     };
-
-//     const handleRestart = () => {
-//         setSessionStats(null);
-//         setSavingStatus(null);
-//     };
-
-//     const handleNewLesson = () => {
-//         // Перезагружаем страницу для нового урока
-//         if (lessonId) {
-//             // Если это системный урок, остаемся на том же ID
-//             window.location.reload();
-//         } else {
-//             // Если главная, просто перезагружаем (случайный урок сгенерируется заново)
-//             window.location.reload();
-//         }
-//     };
-
-//     if (loading) {
-//         return (
-//             <>
-//                 <Header />
-//                 <Container className="text-center mt-5">
-//                     <Spinner animation="border" variant="primary" />
-//                     <p className="mt-3">Загрузка урока...</p>
-//                 </Container>
-//                 <Footer />
-//             </>
-//         );
-//     }
-
-//     if (error) {
-//         return (
-//             <>
-//                 <Header />
-//                 <Container className="mt-5">
-//                     <Alert variant="danger">
-//                         <Alert.Heading>Ошибка</Alert.Heading>
-//                         <p>{error}</p>
-//                         <button 
-//                             className="btn btn-primary"
-//                             onClick={() => navigate('/')}
-//                         >
-//                             Вернуться на главную
-//                         </button>
-//                     </Alert>
-//                 </Container>
-//                 <Footer />
-//             </>
-//         );
-//     }
-
-//     return (
-//         <div className="d-flex flex-column" style={{ minHeight: '88vh' }}>
-//             <Header />
-            
-//             <Container className="flex-grow-1 py-4">
-//                 {/* Информационная карточка для неавторизованных на главной */}
-//                 {!lessonId && !isAuthenticated && !sessionStats && (
-//                     <Card className="mb-4 bg-light">
-//                         <Card.Body>
-//                             <Row className="align-items-center">
-//                                 <Col md={8}>
-//                                     <h5>🔐 Тренируйтесь и сохраняйте прогресс</h5>
-//                                     <p className="mb-0 text-muted">
-//                                         Сейчас вы проходите случайный урок. 
-//                                         Войдите в аккаунт, чтобы ваша статистика сохранялась 
-//                                         и мы могли генерировать персонализированные уроки 
-//                                         специально под ваши проблемные места!
-//                                     </p>
-//                                 </Col>
-//                                 <Col md={4} className="text-end">
-//                                     <button 
-//                                         className="btn btn-primary me-2"
-//                                         onClick={() => navigate('/login')}
-//                                     >
-//                                         Войти
-//                                     </button>
-//                                     <button 
-//                                         className="btn btn-outline-primary"
-//                                         onClick={() => navigate('/register')}
-//                                     >
-//                                         Регистрация
-//                                     </button>
-//                                 </Col>
-//                             </Row>
-//                         </Card.Body>
-//                     </Card>
-//                 )}
-
-//                 {/* Заголовок урока */}
-//                 {lesson && !sessionStats && (
-//                     <div className="mb-3">
-//                         <h2>{lesson.title}</h2>
-//                         {lesson.description && (
-//                             <p className="text-muted">{lesson.description}</p>
-//                         )}
-//                     </div>
-//                 )}
-
-//                 {/* Область тренировки */}
-//                 {lesson && !sessionStats && (
-//                     <TypingArea 
-//                         lesson={lesson}
-//                         onComplete={handleLessonComplete}
-//                     />
-//                 )}
-
-//                 {/* Результаты */}
-//                 {sessionStats && (
-//                     <>
-//                         {/* Индикатор сохранения */}
-//                         {savingStatus === 'saving' && (
-//                             <Alert variant="info" className="text-center">
-//                                 <Spinner animation="border" size="sm" className="me-2" />
-//                                 Сохранение результатов...
-//                             </Alert>
-//                         )}
-                        
-//                         {savingStatus === 'saved' && (
-//                             <Alert variant="success" className="text-center">
-//                                 ✓ Результаты успешно сохранены!
-//                             </Alert>
-//                         )}
-                        
-//                         {savingStatus === 'error' && (
-//                             <Alert variant="danger" className="text-center">
-//                                 ❌ Ошибка при сохранении результатов
-//                             </Alert>
-//                         )}
-
-//                         <StatsArea 
-//                             stats={sessionStats}
-//                             isAuthenticated={isAuthenticated}
-//                         />
-                        
-//                         <div className="text-center mt-3">
-//                             <button 
-//                                 className="btn btn-outline-primary me-2"
-//                                 onClick={handleRestart}
-//                             >
-//                                 Пройти еще раз
-//                             </button>
-//                             <button 
-//                                 className="btn btn-outline-secondary"
-//                                 onClick={handleNewLesson}
-//                             >
-//                                 Новый урок
-//                             </button>
-//                         </div>
-//                     </>
-//                 )}
-//             </Container>
-
-//             <Footer />
-//         </div>
-//     );
-// };
-
-// export default LessonPage;
-
-
-// pages/LessonPage.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Spinner, Alert, Row, Col, Card, Badge } from 'react-bootstrap';
+import { Container, Spinner, Alert, Row, Col, Card, Badge, Form } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -295,6 +9,11 @@ import StatsArea from '../components/StatsArea';
 import api from '../api/api';
 
 const LessonPage = () => {
+    const decodeText = (str) => {
+        if (!str) return str;
+        return str.replace(/\\s/g, '␣');
+    };
+
     const { lessonId } = useParams();
     const navigate = useNavigate();
     
@@ -304,8 +23,11 @@ const LessonPage = () => {
     const [savingStatus, setSavingStatus] = useState(null);
     const [error, setError] = useState(null);
     const [isGeneratedLesson, setIsGeneratedLesson] = useState(false);
-    const [allLessons, setAllLessons] = useState([]); // для проверки наличия следующего урока
-    
+    const [allLessons, setAllLessons] = useState([]); // для проверки наличия следующего урока    
+
+    const [generateType, setGenerateType] = useState('letters'); // 'auto', 'letters', 'bigrams'
+    const [generating, setGenerating] = useState(false);
+
     const { isAuthenticated } = useSelector((state) => state.auth);
 
     // Загрузка всех уроков (для проверки следующего)
@@ -321,7 +43,46 @@ const LessonPage = () => {
         fetchAllLessons();
     }, []);
 
-    // Загрузка урока
+
+    const generateNewLesson = useCallback(async (type) => {
+        if (!isAuthenticated) return;
+        
+        setError(null);
+        setSessionStats(null);
+
+        // Таймер для показа текста "Загрузка урока" через 2 секунды (а то неприятно моргает интерфейс)
+        let timer = setTimeout(() => {
+            setGenerating(true);
+        }, 2000);
+        
+        try {
+            const response = await api.post('/lessons/generate/', { type });
+            setLesson(response.data);
+            setIsGeneratedLesson(true);
+        } catch (error) {
+            console.error('Ошибка генерации урока:', error);
+            setError('Не удалось сгенерировать урок');
+        } finally {
+            clearTimeout(timer);
+            setGenerating(false);
+        }
+    }, [isAuthenticated]);
+
+    // Обработчик переключения слайдера
+    const handleTypeChange = (e) => {
+        const newType = e.target.checked ? 'bigrams' : 'letters';
+        setGenerateType(newType);
+        generateNewLesson(newType);
+    };
+
+    // Первоначальная генерация
+    useEffect(() => {
+        if (!lessonId && isAuthenticated && !lesson && !generating && !sessionStats) {
+            generateNewLesson('letters');
+        }
+    }, [lessonId, isAuthenticated, lesson, generating, sessionStats, generateNewLesson]);
+
+    // Загрузка урока (только при первом монтировании или изменении lessonId)
     useEffect(() => {
         const fetchLesson = async () => {
             setLoading(true);
@@ -336,16 +97,23 @@ const LessonPage = () => {
                     console.log(`Загрузка системного урока ${lessonId}`);
                     response = await api.get(`/lessons/lessons/${lessonId}/`);
                     setIsGeneratedLesson(false);
+                    setLesson(response.data);
                 } else {
                     // Случай 2: Главная страница - генерация или случайный урок
                     console.log('Загрузка урока для главной страницы');
                     
                     if (isAuthenticated) {
-                        // Авторизован - генерируем персонализированный урок
-                        response = await api.post('/lessons/generate/', {
-                            type: 'auto'
-                        });
-                        setIsGeneratedLesson(true);
+                        // Авторизован - генерируем автоматически
+                        // response = await api.post('/lessons/generate/', {
+                        //     type: 'auto'
+                        // });
+                        // setIsGeneratedLesson(true);
+
+                        // Авторизован - показываем интерфейс выбора
+                        setLesson(null);
+                        setLoading(false);
+                        return; // выходим, ждём действия пользователя
+
                     } else {
                         // Не авторизован - случайный системный урок
                         const lessonsResponse = await api.get('/lessons/lessons/');
@@ -359,10 +127,9 @@ const LessonPage = () => {
                             throw new Error('Нет доступных уроков');
                         }
                         setIsGeneratedLesson(false);
+                        setLesson(response.data);
                     }
                 }
-                
-                setLesson(response.data);
             } catch (error) {
                 console.error('Ошибка загрузки урока:', error);
                 setError('Не удалось загрузить урок. Пожалуйста, попробуйте позже.');
@@ -532,14 +299,42 @@ const LessonPage = () => {
                                     >
                                         Войти
                                     </button>
-                                    {/* <button 
-                                        className="btn btn-outline-primary"
-                                        onClick={() => navigate('/register')}
-                                    >
-                                        Регистрация
-                                    </button> */}
                                 </Col>
                             </Row>
+                        </Card.Body>
+                    </Card>
+                )}
+
+                {/* Панель выбора типа генерации (только для авторизованных на главной) */}
+                {!lessonId && isAuthenticated && !sessionStats && (
+                    <Card className="mb-4 shadow-sm border-0">
+                        <Card.Body className="text-center">
+                            <h5 className="mb-3">🎯 Выберите тип урока</h5>
+                            
+                            {/* Слайдер */}
+                            <div className="d-flex justify-content-center align-items-center gap-3 mb-4">
+                                <span className={generateType === 'letters' ? 'fw-bold text-primary' : 'text-muted'}>
+                                    🔤 По буквам
+                                </span>
+                                <Form.Check
+                                    type="switch"
+                                    id="generate-type-switch"
+                                    checked={generateType === 'bigrams'}
+                                    onChange={handleTypeChange}
+                                    disabled={generating}
+                                    style={{ transform: 'scale(1.2)' }}
+                                />
+                                <span className={generateType === 'bigrams' ? 'fw-bold text-primary' : 'text-muted'}>
+                                    🔗 По биграммам
+                                </span>
+                            </div>
+                            
+                            {generating && (
+                                <div className="text-muted">
+                                    <Spinner animation="border" size="sm" className="me-2" />
+                                    Генерация урока...
+                                </div>
+                            )}
                         </Card.Body>
                     </Card>
                 )}
@@ -548,7 +343,7 @@ const LessonPage = () => {
                 {lesson && !sessionStats && (
                     <div className="mb-3 d-flex justify-content-between align-items-center">
                         <div>
-                            <h2>{lesson.title}</h2>
+                            <h2>{decodeText(lesson.title)}</h2>
                             {lesson.description && (
                                 <p className="text-muted">{lesson.description}</p>
                             )}
