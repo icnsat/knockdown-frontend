@@ -11,6 +11,14 @@ import api from '../api/api';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend);
 
 const StatsPage = () => {
+    const decodeLetter = (letter) => {
+        return letter === '\\s' ? '␣' : letter;
+    };
+
+    const decodeBigram = (bigram) => {
+        return bigram.replace(/\\s/g, '␣');
+    };
+
     const { isAuthenticated } = useSelector((state) => state.auth);
     // const { isAuthenticated, user } = useSelector((state) => state.auth);
     const [loading, setLoading] = useState(true);
@@ -329,7 +337,7 @@ const StatsPage = () => {
                                         <tbody>
                                             {letterStats.map((item, idx) => (
                                                 <tr key={idx}>
-                                                    <td><strong>{item.letter === ' ' ? '␣' : item.letter}</strong></td>
+                                                    <td><strong>{decodeLetter(item.letter)}</strong></td>
                                                     <td>{item.occurrences}</td>
                                                     <td>{item.errors}</td>
                                                     <td><Badge
@@ -358,7 +366,7 @@ const StatsPage = () => {
                                         <tbody>
                                             {bigramStats.map((item, idx) => (
                                                 <tr key={idx}>
-                                                    <td><strong>{item.bigram.replace(/ /g, '␣')}</strong></td>
+                                                    <td><strong>{decodeBigram(item.bigram)}</strong></td>
                                                     <td>{item.occurrences}</td>
                                                     <td>{item.errors}</td>
                                                     <td><Badge
@@ -397,10 +405,10 @@ const StatsPage = () => {
                             <Card.Body>
                                 <Card.Title className="text-center">💡 Рекомендации</Card.Title>
                                 {letterStats.length > 0 && (
-                                    <p className="mb-1 mt-4">🔴 Чаще всего ошибки в букве <strong>"{letterStats[0]?.letter}"</strong> — потренируйте её</p>
+                                    <p className="mb-1 mt-4">🔴 Чаще всего ошибки в букве <strong>"{decodeLetter(letterStats[0]?.letter)}"</strong> — потренируйте её</p>
                                 )}
                                 {bigramStats.length > 0 && (
-                                    <p className="mb-1">🔴 Проблемная биграмма: <strong>"{bigramStats[0]?.bigram}"</strong></p>
+                                    <p className="mb-1">🔴 Проблемная биграмма: <strong>"{decodeBigram(bigramStats[0]?.bigram)}"</strong></p>
                                 )}
                                 {(!letterStats.length && !bigramStats.length) && (
                                     <p className="text-muted mt-4">Пройдите несколько уроков для получения рекомендаций</p>
