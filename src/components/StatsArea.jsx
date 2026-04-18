@@ -12,7 +12,7 @@ const StatsArea = ({ stats, isAuthenticated }) => {
         return bigram.replace(/\\s/g, '␣');
     };
 
-    // Сортировка букв: сначала по проценту ошибок (по убыванию), потом по скорости (по возрастанию)
+    // Сортировка букв: сначала по проценту ошибок, потом по времени
     const topLetters = Object.entries(stats.letterStats || {})
         .sort((a, b) => {
             const errorA = a[1].errors / a[1].occurrences;
@@ -21,11 +21,11 @@ const StatsArea = ({ stats, isAuthenticated }) => {
             if (errorA !== errorB) {
                 return errorB - errorA; // по ошибкам (сначала больше)
             }
-            return a[1].avgTime - b[1].avgTime; // по скорости (сначала медленнее)
+            return b[1].avgTime - a[1].avgTime; // по времени перехода (сначала медленнее)
         })
         .slice(0, 5);
 
-    // Сортировка биграмм: сначала по проценту ошибок (по убыванию), потом по времени (по возрастанию)
+    // Сортировка биграмм: сначала по проценту ошибок, потом по времени
     const topBigrams = Object.entries(stats.bigramStats || {})
         .sort((a, b) => {
             const errorA = a[1].errors / a[1].occurrences;
@@ -34,7 +34,7 @@ const StatsArea = ({ stats, isAuthenticated }) => {
             if (errorA !== errorB) {
                 return errorB - errorA; // по ошибкам (сначала больше)
             }
-            return a[1].avgTime - b[1].avgTime; // по времени (сначала медленнее)
+            return b[1].avgTime - a[1].avgTime; // по времени перехода (сначала медленнее)
         })
         .slice(0, 5);
 
