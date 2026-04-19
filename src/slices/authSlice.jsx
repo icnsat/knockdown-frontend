@@ -19,7 +19,6 @@ export const loginUser = createAsyncThunk(
     'auth/login',
     async ({ username, password }, { rejectWithValue }) => {
         try {
-            // 1. Получаем токены
             const response = await api.post('/auth/jwt/create/', {
                 username,
                 password
@@ -30,7 +29,6 @@ export const loginUser = createAsyncThunk(
             localStorage.setItem('accessToken', access);
             localStorage.setItem('refreshToken', refresh);
             
-            // 2. Сразу получаем данные пользователя
             const userResponse = await api.get('/auth/users/me/');
             
             return {
@@ -68,7 +66,6 @@ export const updateUserProfile = createAsyncThunk(
     }
 );
 
-// Функция для проверки валидности токена
 const isTokenValid = (token) => {
     if (!token) return false;
     try {
@@ -79,13 +76,11 @@ const isTokenValid = (token) => {
     }
 };
 
-// Загрузка начального состояния из localStorage
 const loadInitialState = () => {
     const accessToken = localStorage.getItem('accessToken');
     const refreshToken = localStorage.getItem('refreshToken');
 
     if (accessToken && isTokenValid(accessToken)) {
-            // const decoded = jwtDecode(accessToken);
         return {
             accessToken,
             refreshToken,

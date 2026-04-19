@@ -4,16 +4,15 @@ import { Card, ProgressBar } from 'react-bootstrap';
 const TypingArea = ({ lesson, onComplete }) => {
     const [userInput, setUserInput] = useState('');
     const [startTime, setStartTime] = useState(null);
-    const [errorHistory, setErrorHistory] = useState([]); // Все ошибки за всю тренировку
+    const [errorHistory, setErrorHistory] = useState([]);
     const [keystrokes, setKeystrokes] = useState([]);
     const [isCompleted, setIsCompleted] = useState(false);
-    const [errorPositions, setErrorPositions] = useState(new Set()); // Множество позиций с ошибками
+    const [errorPositions, setErrorPositions] = useState(new Set());
 
     const targetText = lesson.content;
     const characters = targetText.length;
     const progress = (userInput.length / targetText.length) * 100;
 
-    // Функция для определения цвета буквы
     const getLetterColor = (index) => {
         // Если позиция еще не пройдена - прозрачный фон
         if (index >= userInput.length) {
@@ -51,9 +50,7 @@ const TypingArea = ({ lesson, onComplete }) => {
         const uniqueErrors = errorPositions.size;
         const accuracy = Math.round(((characters - uniqueErrors) / characters) * 100);
 
-        // Статистика по буквам (с учетом всех ошибок и временем нажатия)
-        const letterStats = {};
-        
+
         // Сначала инициализируем все буквы из текста
         targetText.split('').forEach((char, index) => {
             if (!letterStats[char]) {
@@ -65,7 +62,9 @@ const TypingArea = ({ lesson, onComplete }) => {
                 };
             }
         });
-        
+
+        // Статистика по буквам (с учетом всех ошибок и временем нажатия)
+        const letterStats = {};
         // Заполняем статистику из keystrokes
         keystrokes.forEach(keystroke => {
             const char = keystroke.expected; // используем ожидаемый символ
@@ -81,7 +80,6 @@ const TypingArea = ({ lesson, onComplete }) => {
                 }
             }
         });
-
 
         // Вычисляем среднее время для каждой буквы
         Object.keys(letterStats).forEach(char => {
@@ -233,7 +231,6 @@ const TypingArea = ({ lesson, onComplete }) => {
     }, [userInput, startTime, targetText, isCompleted, keystrokes, completeLesson]);
 
 
-    // Добавляем обработчик при монтировании
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
@@ -252,7 +249,6 @@ const TypingArea = ({ lesson, onComplete }) => {
                     }}
                 >
                     {targetText.split('').map((char, index) => {
-                        // Определяем, пройдена ли позиция
                         const isPassed = index < userInput.length;
                         
                         return (
@@ -284,7 +280,7 @@ const TypingArea = ({ lesson, onComplete }) => {
                     <div 
                         style={{ 
                             width: `${progress}%`, 
-                            backgroundColor: '#8c6e98', // цвет заполняющейся полоски
+                            backgroundColor: '#8c6e98',
                             height: '100%',
                             borderRadius: '10px',
                             transition: 'width 0.3s ease',
@@ -295,7 +291,6 @@ const TypingArea = ({ lesson, onComplete }) => {
                             fontSize: '12px'
                         }}
                     >
-                        {/* {`${Math.round(progress)}%`} */}
                     </div>
                 </ProgressBar>
 

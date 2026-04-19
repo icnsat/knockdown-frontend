@@ -2,12 +2,10 @@ import { Card, Row, Col, Table, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 const StatsArea = ({ stats, isAuthenticated }) => {
-    // Функция для отображения пробелов как ␣
     const decodeLetter = (letter) => {
         return letter === ' ' ? '␣' : letter;
     };
 
-    // Функция для отображения биграмм с пробелами как ␣
     const decodeBigram = (bigram) => {
         return bigram.replace(/ /g, '␣');
     };
@@ -46,13 +44,6 @@ const StatsArea = ({ stats, isAuthenticated }) => {
     const fastestLetter = lettersBySpeed[0];
     const slowestLetter = lettersBySpeed[lettersBySpeed.length - 1];
 
-    // // Данные для графиков
-    // const speedData = [
-    //     { label: 'Текущая', value: stats.speed, max: 200 },
-    //     { label: 'Цель', value: 100, max: 200 }
-    // ];
-
-    // Форматирование времени
     const formatTime = (ms) => {
         if (!ms) return '—';
         return `${ms}мс`;
@@ -149,56 +140,6 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                     </Col>
                 </Row>
 
-                {/* Графики */}
-                {/* <Row className="mb-4">
-                    <Col md={6}>
-                        <h5>Скорость</h5>
-                        {speedData.map((item, idx) => (
-                            <div key={idx} className="mb-2">
-                                <div className="d-flex justify-content-between">
-                                    <span>{item.label}</span>
-                                    <span>{item.value} зн/мин</span>
-                                </div>
-                                <ProgressBar 
-                                    now={(item.value / item.max) * 100} 
-                                    variant={idx === 0 ? 'primary' : 'secondary'}
-                                />
-                            </div>
-                        ))}
-                    </Col>
-                    <Col md={6}>
-                        <h5>Точность</h5>
-                        <div className="text-center">
-                            <div style={{ position: 'relative', display: 'inline-block' }}>
-                                <svg width="120" height="120">
-                                    <circle
-                                        cx="60"
-                                        cy="60"
-                                        r="50"
-                                        fill="none"
-                                        stroke="#e0e0e0"
-                                        strokeWidth="10"
-                                    />
-                                    <circle
-                                        cx="60"
-                                        cy="60"
-                                        r="50"
-                                        fill="none"
-                                        stroke="#28a745"
-                                        strokeWidth="10"
-                                        strokeDasharray={`${2 * Math.PI * 50 * stats.accuracy / 100} ${2 * Math.PI * 50 * (100 - stats.accuracy) / 100}`}
-                                        strokeDashoffset={2 * Math.PI * 50 * 0.25}
-                                        transform="rotate(-90 60 60)"
-                                    />
-                                    <text x="60" y="65" textAnchor="middle" fontSize="20">
-                                        {stats.accuracy}%
-                                    </text>
-                                </svg>
-                            </div>
-                        </div>
-                    </Col>
-                </Row> */}
-
                 {/* 3. Блок для неавторизованных */}
                 {!isAuthenticated && (
                     <div className="text-center p-4 mb-4 bg-light rounded">
@@ -213,9 +154,6 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                             <Link to="/auth" className="btn btn-primary" style={{ backgroundColor: '#4F849D', border: 'none' }}>
                                 Войти
                             </Link>
-                            {/* <Link to="/register" className="btn btn-outline-secondary">
-                                Регистрация
-                            </Link> */}
                         </div>
                     </div>
                 )}

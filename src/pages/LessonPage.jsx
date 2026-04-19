@@ -30,7 +30,7 @@ const LessonPage = () => {
 
     const { isAuthenticated } = useSelector((state) => state.auth);
 
-    // Загрузка всех уроков (для проверки следующего)
+    // Загрузка всех уроков (для проверки наличия следующего)
     useEffect(() => {
         const fetchAllLessons = async () => {
             try {
@@ -75,13 +75,6 @@ const LessonPage = () => {
         generateNewLesson(newType);
     };
 
-    // Первоначальная генерация
-    useEffect(() => {
-        if (!lessonId && isAuthenticated && !lesson && !generating && !sessionStats) {
-            generateNewLesson('letters');
-        }
-    }, [lessonId, isAuthenticated, lesson, generating, sessionStats, generateNewLesson]);
-
     // Загрузка урока (только при первом монтировании или изменении lessonId)
     useEffect(() => {
         const fetchLesson = async () => {
@@ -104,16 +97,9 @@ const LessonPage = () => {
                     
                     if (isAuthenticated) {
                         // Авторизован - генерируем автоматически
-                        // response = await api.post('/lessons/generate/', {
-                        //     type: 'auto'
-                        // });
-                        // setIsGeneratedLesson(true);
-
-                        // Авторизован - показываем интерфейс выбора
-                        setLesson(null);
-                        setLoading(false);
-                        return; // выходим, ждём действия пользователя
-
+                        const response = await api.post('/lessons/generate/', { type: 'letters' });
+                        setIsGeneratedLesson(true);
+                        setLesson(response.data);
                     } else {
                         // Не авторизован - случайный системный урок
                         const lessonsResponse = await api.get('/lessons/lessons/');

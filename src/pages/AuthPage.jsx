@@ -24,11 +24,9 @@ const AuthPage = () => {
     };
 
     return (
-        // <Container fluid className="min-vh-100 d-flex align-items-center justify-content-center">
         <div className="d-flex flex-column" style={{ minHeight: '88vh' }}>
             <Header />
 
-            {/* <Row className="w-100"> */}
             <div className="d-flex flex-grow-1 align-items-center">
                 <Col md={6} lg={5} xl={4} className="mx-auto">
                     <Card className="border-0 rounded-4">
@@ -79,12 +77,10 @@ const AuthPage = () => {
                         </Card.Body>
                     </Card>
                 </Col>
-            {/* </Row> */}
             </div>
-
+            
             <Footer />
         </div>
-        // </Container>
     );
 };
 

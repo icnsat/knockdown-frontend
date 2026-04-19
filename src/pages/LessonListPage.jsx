@@ -29,7 +29,6 @@ const LessonListPage = () => {
         fetchLessons();
     }, []);
 
-    // Функция для определения цвета сложности
     const getDifficultyColor = (level) => {
         switch(level) {
             case 1: return 'success';
@@ -40,7 +39,6 @@ const LessonListPage = () => {
         }
     };
 
-    // Функция для определения статуса урока (пройден/нет)
     const getLessonStatus = (lesson) => {
         if (lesson.progress?.is_passed) {
             return { text: 'Пройден', variant: 'success' };
@@ -83,9 +81,7 @@ const LessonListPage = () => {
         <div className="d-flex flex-column" style={{ minHeight: '88vh' }}>
             <Header />
             
-            <Container className="flex-grow-1 py-4">
-                {/* <h1 className="mb-4">Список уроков</h1> */}
-                
+            <Container className="flex-grow-1 py-4">                
                 {!isAuthenticated && (
                     <Card className="mb-4 bg-light border-0">
                         <Card.Body>
@@ -152,7 +148,6 @@ const LessonListPage = () => {
                                             )}
                                         </div>
 
-                                        {/* Прогресс-бар если есть данные */}
                                         {lesson.progress && lesson.progress.completion_count > 0 && (
                                             <div className="mt-3">
                                                 <small className="text-muted">
@@ -161,13 +156,6 @@ const LessonListPage = () => {
                                             </div>
                                         )}
                                     </Card.Body>
-                                    
-                                    {/* Бейдж "Рекомендуется" для непройденных уроков с низкой сложностью */}
-                                    {/* {!lesson.progress && lesson.difficulty_level <= 2 && (
-                                        <div className="position-absolute top-0 start-0 p-2">
-                                            <Badge bg="warning" text="dark">🌟 Для начала</Badge>
-                                        </div>
-                                    )} */}
                                 </Card>
                             </Col>
                         );

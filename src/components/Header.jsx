@@ -2,7 +2,6 @@ import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUserProfile } from '../slices/authSlice';
-// import { logout } from '../slices/authSlice';
 import { useState, useEffect } from 'react';
 
 import iconLight from '../assets/logo192.png';
@@ -19,7 +18,6 @@ const Header = () => {
         document.body.getAttribute('data-bs-theme') || 'light'
     );
         
-    // Загрузка профиля при наличии токена
     useEffect(() => {
         if (accessToken && !user) {
             dispatch(fetchUserProfile());
@@ -74,22 +72,6 @@ const Header = () => {
                     </Navbar.Brand>
                 </div>
 
-                {/* <Navbar.Brand
-                    onClick={handleHomeClick}
-                    className="fw-bold fs-3 d-flex align-items-center"
-                    style={{ cursor: 'pointer' }}
-                >
-                    <img 
-                        src={icon} 
-                        alt="logo" 
-                        width="30" 
-                        height="30" 
-                        className="me-2"
-                    />
-                    KNOCKDOWN
-                </Navbar.Brand>
-                 */}
-
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 
                 <Navbar.Collapse id="basic-navbar-nav">
@@ -106,38 +88,18 @@ const Header = () => {
                     
                     <Nav>
                         {isAuthenticated ? (
-                            <>
-                                <Nav.Link as={Link} to="/profile">
-                                    {user?.username || 'Профиль'}
-                                </Nav.Link>
-                                {/* <Button 
-                                    variant="outline" 
-                                    size="sm"
-                                    onClick={handleLogout}
-                                >
-                                    Выйти
-                                </Button> */}
-                            </>
+                            <Nav.Link as={Link} to="/profile">
+                                {user?.username || 'Профиль'}
+                            </Nav.Link>
                         ) : (
-                            <>
-                                {/* <Nav.Link as={Link} to="/login">Вход</Nav.Link> */}
-                                {/* <Button 
-                                    variant="primary" 
-                                    size="sm"
-                                    as={Link} 
-                                    to="/register"
-                                >
-                                    Регистрация
-                                </Button> */}
-                                <Button 
-                                    variant="outline" 
-                                    size="sm"
-                                    as={Link} 
-                                    to="/auth"
-                                >
-                                    Вход
-                                </Button>
-                            </>
+                            <Button 
+                                variant="outline" 
+                                size="sm"
+                                as={Link} 
+                                to="/auth"
+                            >
+                                Вход
+                            </Button>
                         )}
                     </Nav>
                 </Navbar.Collapse>
