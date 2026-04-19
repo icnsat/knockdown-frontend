@@ -50,6 +50,8 @@ const TypingArea = ({ lesson, onComplete }) => {
         const uniqueErrors = errorPositions.size;
         const accuracy = Math.round(((characters - uniqueErrors) / characters) * 100);
 
+        // Статистика по буквам (с учетом всех ошибок и временем нажатия)
+        const letterStats = {};
 
         // Сначала инициализируем все буквы из текста
         targetText.split('').forEach((char, index) => {
@@ -63,8 +65,6 @@ const TypingArea = ({ lesson, onComplete }) => {
             }
         });
 
-        // Статистика по буквам (с учетом всех ошибок и временем нажатия)
-        const letterStats = {};
         // Заполняем статистику из keystrokes
         keystrokes.forEach(keystroke => {
             const char = keystroke.expected; // используем ожидаемый символ
