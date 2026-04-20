@@ -20,7 +20,6 @@ const StatsPage = () => {
     };
 
     const { isAuthenticated } = useSelector((state) => state.auth);
-    // const { isAuthenticated, user } = useSelector((state) => state.auth);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     
@@ -30,7 +29,6 @@ const StatsPage = () => {
     const [recentSessions, setRecentSessions] = useState([]);
     const [letterStats, setLetterStats] = useState([]);
     const [bigramStats, setBigramStats] = useState([]);
-    // const [allSessions, setAllSessions] = useState([]);
 
     useEffect(() => {
         if (!isAuthenticated) return;
@@ -46,11 +44,10 @@ const StatsPage = () => {
                 ]);
                 
                 setDashboard(dashboardRes.data);
-                setDailyStats([...dailyRes.data].reverse()); // от старых к новым для диаграмм
+                setDailyStats([...dailyRes.data].reverse());
                 setRecentSessions(sessionsRes.data);
                 setLetterStats(lettersRes.data);
                 setBigramStats(bigramsRes.data);
-                // setAllSessions(sessionsRes.data);
             } catch (err) {
                 setError('Не удалось загрузить статистику');
             } finally {
@@ -67,9 +64,15 @@ const StatsPage = () => {
                 <Header />
                 <Container className="text-center mt-5">
                     <Alert variant="warning">
-                        <Alert.Heading>🔐 Требуется авторизация</Alert.Heading>
+                        <Alert.Heading>
+                            <i className="bi bi-lock me-2"></i>
+                            Требуется авторизация
+                        </Alert.Heading>
                         <p>Войдите в аккаунт для просмотра статистики</p>
-                        <Button as={Link} to="/auth" variant="outline-dark">Войти</Button>
+                        <Button as={Link} to="/auth" variant="outline-dark">
+                            <i className="bi bi-box-arrow-in-right me-2"></i>
+                            Войти
+                        </Button>
                     </Alert>
                 </Container>
                 <Footer />
@@ -110,7 +113,6 @@ const StatsPage = () => {
                 label: 'Скорость (зн/мин)',
                 data: dailyStats.map(item => item.average_speed_wpm),
                 borderColor: '#8c6e98',
-                // backgroundColor: 'rgba(53, 162, 235, 0.1)',
                 tension: 0.3,
                 fill: true,
                 yAxisID: 'y',
@@ -119,7 +121,6 @@ const StatsPage = () => {
                 label: 'Точность (%)',
                 data: dailyStats.map(item => item.average_accuracy_percentage),
                 borderColor: '#C87DA8',
-                // backgroundColor: 'rgba(75, 192, 192, 0.1)',
                 tension: 0.3,
                 fill: true,
                 yAxisID: 'y1',
@@ -130,14 +131,9 @@ const StatsPage = () => {
     const progressChartOptions = {
         responsive: true,
         interaction: { mode: 'index', intersect: false },
-        // plugins: {
-        //     legend: { position: 'top' },
-        //     title: { 
-        //         display: true,
-        //         text: 'Динамика прогресса по дням',
-        //         font: { size: 20 }
-        //     }
-        // },
+        plugins: {
+            legend: { position: 'top' },
+        },
         scales: {
             y: { title: { display: true, text: 'Скорость (зн/мин)' }, beginAtZero: true },
             y1: { title: { display: true, text: 'Точность (%)' }, position: 'right', beginAtZero: true, max: 100 }
@@ -145,15 +141,14 @@ const StatsPage = () => {
     };
 
     // Данные для графика прогресса по последним сессиям
-    const sessionsForChart = [...recentSessions].reverse(); // от первой к последней
+    const sessionsForChart = [...recentSessions].reverse();
     const sessionChartData = {
-        labels: sessionsForChart.map((_, idx) => idx + 1), // номер сессии
+        labels: sessionsForChart.map((_, idx) => idx + 1),
         datasets: [
             {
                 label: 'Скорость (зн/мин)',
                 data: sessionsForChart.map(s => s.average_speed_wpm),
                 borderColor: '#37AAAB',
-                // backgroundColor: 'rgba(55, 170, 171, 0.1)',
                 tension: 0.3,
                 fill: true,
             },
@@ -161,7 +156,6 @@ const StatsPage = () => {
                 label: 'Точность (%)',
                 data: sessionsForChart.map(s => s.accuracy_percentage),
                 borderColor: '#4F849D',
-                // backgroundColor: 'rgba(200, 125, 168, 0.1)',
                 tension: 0.3,
                 fill: true,
             }
@@ -171,14 +165,9 @@ const StatsPage = () => {
     const sessionChartOptions = {
         responsive: true,
         interaction: { mode: 'index', intersect: false },
-        // plugins: {
-        //     legend: { position: 'top' },
-        //     title: { 
-        //         display: true,
-        //         text: 'Динамика прогресса по последним тренировкам',
-        //         font: { size: 20 }
-        //     }
-        // },
+        plugins: {
+            legend: { position: 'top' },
+        },
         scales: {
             x: { title: { display: true, text: 'Номер тренировки' } },
             y: { title: { display: true, text: 'Скорость (зн/мин)' }, beginAtZero: true },
@@ -186,7 +175,7 @@ const StatsPage = () => {
         }
     };
 
-    // Данные для круговой диаграммы (распределение по типам уроков)
+    // Данные для круговой диаграммы
     const lessonTypes = {};
     recentSessions.forEach(session => {
         const type = session.lesson_title ? 'Системные' : 'Сгенерированные';
@@ -213,8 +202,6 @@ const StatsPage = () => {
             <Header />
             
             <Container className="flex-grow-1 py-4">
-                {/* <h1 className="mb-4">Моя статистика</h1> */}
-
                 {/* 1. Ключевые метрики */}
                 <Row className="justify-content-between align-items-stretch mb-4">
                     <Col md={2}>
@@ -222,7 +209,8 @@ const StatsPage = () => {
                             className="h-100 text-white text-center p-3"
                             style={{ backgroundColor: '#37AAAB' }} 
                         >  
-                            <h2>{dashboard?.total_sessions || 0}</h2><span>всего тренировок</span>
+                            <h2>{dashboard?.total_sessions || 0}</h2>
+                            <span>всего тренировок</span>
                         </Card>
                     </Col>
                     <Col md={2}>
@@ -230,7 +218,8 @@ const StatsPage = () => {
                             className="h-100 text-white text-center p-3"
                             style={{ backgroundColor: '#4F849D' }} 
                         >
-                            <h2>{dashboard?.total_time || 0} мин</h2><span>общее время</span>
+                            <h2>{dashboard?.total_time || 0} мин</h2>
+                            <span>общее время</span>
                         </Card>
                     </Col>
                     <Col md={2}>
@@ -238,7 +227,8 @@ const StatsPage = () => {
                             className="h-100 text-white text-center p-3"
                             style={{ backgroundColor: '#6E799B' }}
                         >
-                            <h2>{dashboard?.best_speed || 0}</h2><span>лучшая скорость</span>
+                            <h2>{dashboard?.best_speed || 0}</h2>
+                            <span>лучшая скорость</span>
                         </Card>
                     </Col>
                     <Col md={2}>
@@ -246,7 +236,8 @@ const StatsPage = () => {
                             className="h-100 text-white text-center p-3"
                             style={{ backgroundColor: '#8c6e98' }}
                         >
-                            <h2>{dashboard?.avg_speed || 0}</h2><span>средняя скорость</span>
+                            <h2>{dashboard?.avg_speed || 0}</h2>
+                            <span>средняя скорость</span>
                         </Card>
                     </Col>
                     <Col md={2}>
@@ -254,12 +245,13 @@ const StatsPage = () => {
                             className="h-100 text-white text-center p-3"
                             style={{ backgroundColor: '#C87DA8' }}
                         >
-                            <h2>{dashboard?.avg_accuracy || 0}</h2><span>средняя точность</span>
+                            <h2>{dashboard?.avg_accuracy || 0}%</h2>
+                            <span>средняя точность</span>
                         </Card>
                     </Col>
                 </Row>
 
-                {/* 2.1. График прогресса по дням (скорость + точность) */}
+                {/* 2.1. График прогресса по дням */}
                 {dailyStats.length > 0 && (
                     <Card className="shadow-sm mb-4">
                         <Card.Body>
@@ -269,15 +261,12 @@ const StatsPage = () => {
                     </Card>
                 )}
 
-                {/* 2.2. График прогресса по сессиям (скорость + точность) */}
+                {/* 2.2. График прогресса по сессиям */}
                 {recentSessions.length > 2 && (
                     <Card className="shadow-sm mb-4">
                         <Card.Body>
                             <Card.Title className="text-center">Динамика прогресса по последним тренировкам</Card.Title>
                             <Line data={sessionChartData} options={sessionChartOptions} />
-                            {/* <div className="text-muted small text-center mt-2">
-                                Каждая точка — одна тренировка. Показывает динамику улучшений от занятия к занятию.
-                            </div> */}
                         </Card.Body>
                     </Card>
                 )}
@@ -312,12 +301,7 @@ const StatsPage = () => {
                                         }}
                                         options={{
                                             responsive: true,
-                                            scales: {
-                                                y: {
-                                                    // title: { display: true, text: '%' },
-                                                    max: 100
-                                                } 
-                                            } 
+                                            scales: { y: { max: 100 } } 
                                         }}
                                     />
                                 ) : (
@@ -341,12 +325,7 @@ const StatsPage = () => {
                                         }}
                                         options={{ 
                                             responsive: true, 
-                                            scales: {
-                                                y: {
-                                                    // title: { display: true, text: 'зн/мин' },
-                                                    beginAtZero: true 
-                                                }
-                                            }
+                                            scales: { y: { beginAtZero: true } }
                                         }}
                                     />
                                 ) : (
@@ -360,23 +339,43 @@ const StatsPage = () => {
                 {/* 4. Последние тренировки */}
                 <Card className="shadow-sm mb-4">
                     <Card.Body>
-                        <Card.Title className="mb-3 text-center">Последние тренировки</Card.Title>
+                        <Card.Title className="mb-3 text-center">
+                            <i className="bi bi-clock-history me-2"></i>
+                            Последние тренировки
+                        </Card.Title>
                         {recentSessions.length > 0 ? (
                             <Table hover responsive>
-                                <thead><tr><th>Дата</th><th>Урок</th><th>Скорость</th><th>Точность</th><th>Ошибки</th><th>Время</th></tr></thead>
+                                <thead>
+                                    <tr>
+                                        <th><i className="bi bi-calendar me-1"></i> Дата</th>
+                                        <th><i className="bi bi-book me-1"></i> Урок</th>
+                                        <th><i className="bi bi-speedometer2 me-1"></i> Скорость</th>
+                                        <th><i className="bi bi-bullseye me-1"></i> Точность</th>
+                                        <th><i className="bi bi-x-circle me-1"></i> Ошибки</th>
+                                        <th><i className="bi bi-stopwatch me-1"></i> Время</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     {recentSessions.map(session => (
                                         <tr key={session.id}>
                                             <td>{formatDate(session.finished_at)}</td>
                                             <td>{session.lesson_title || 'Сгенерированный'}</td>
-                                            <td><Badge 
+                                            <td>
+                                                <Badge
                                                     bg={null}
                                                     style={{ backgroundColor: '#4F849D' }}
-                                                >{session.average_speed_wpm}</Badge></td>
-                                            <td><Badge
+                                                >
+                                                    {session.average_speed_wpm}
+                                                </Badge>
+                                            </td>
+                                            <td>
+                                                <Badge
                                                     bg={null}
-                                                    style={{ backgroundColor: session.accuracy_percentage >= 90 ? '#409750' : '#e6a026'}}
-                                                >{session.accuracy_percentage}%</Badge></td>
+                                                    style={{ backgroundColor: session.accuracy_percentage >= 90 ? '#409750' : '#e6a026' }}
+                                                >
+                                                    {session.accuracy_percentage}%
+                                                </Badge>
+                                            </td>
                                             <td>{session.total_errors}</td>
                                             <td>{formatTime(session.total_duration_seconds)}</td>
                                         </tr>
@@ -394,20 +393,35 @@ const StatsPage = () => {
                     <Col md={6}>
                         <Card className="shadow-sm mb-4">
                             <Card.Body>
-                                <Card.Title className="text-center">🔤 Проблемные буквы</Card.Title>
+                                <Card.Title className="text-center">
+                                    <i className="bi bi-chat-text me-2"></i>
+                                    Проблемные буквы
+                                </Card.Title>
                                 {letterStats.length > 0 ? (
                                     <Table hover size="sm">
-                                        <thead><tr><th>Буква</th><th>Нажатий</th><th>Ошибок</th><th>Ошибок %</th><th>Ср. время</th></tr></thead>
+                                        <thead>
+                                            <tr>
+                                                <th><i className="bi bi-keyboard me-1"></i> Буква</th>
+                                                <th><i className="bi bi-hand-index me-1"></i> Нажатий</th>
+                                                <th><i className="bi bi-x-circle me-1"></i> Ошибок</th>
+                                                <th><i className="bi bi-percent me-1"></i> Ошибок</th>
+                                                <th><i className="bi bi-clock me-1"></i> Ср. время</th>
+                                            </tr>
+                                        </thead>
                                         <tbody>
                                             {letterStats.map((item, idx) => (
                                                 <tr key={idx}>
                                                     <td><strong>{decodeLetter(item.letter)}</strong></td>
                                                     <td>{item.occurrences}</td>
                                                     <td>{item.errors}</td>
-                                                    <td><Badge
+                                                    <td>
+                                                        <Badge
                                                             bg={null}
-                                                            style={{ backgroundColor: item.error_percent > 15 ? '#dd5132' : '#e6a026'}}
-                                                        >{item.error_percent}%</Badge></td>
+                                                            style={{ backgroundColor: item.error_percent > 15 ? '#dd5132' : '#e6a026' }}
+                                                        >
+                                                            {item.error_percent}%
+                                                        </Badge>
+                                                    </td>
                                                     <td>{item.avg_time} мс</td>
                                                 </tr>
                                             ))}
@@ -423,20 +437,35 @@ const StatsPage = () => {
                     <Col md={6}>
                         <Card className="shadow-sm mb-4">
                             <Card.Body>
-                                <Card.Title className="text-center">🔗 Проблемные биграммы</Card.Title>
+                                <Card.Title className="text-center">
+                                    <i className="bi bi-link-45deg me-2"></i>
+                                    Проблемные биграммы
+                                </Card.Title>
                                 {bigramStats.length > 0 ? (
                                     <Table hover size="sm">
-                                        <thead><tr><th>Биграмма</th><th>Появлений</th><th>Ошибок</th><th>Ошибок %</th><th>Ср. время</th></tr></thead>
+                                        <thead>
+                                            <tr>
+                                                <th><i className="bi bi-link-45deg me-1"></i> Биграмма</th>
+                                                <th><i className="bi bi-hand-index me-1"></i> Появлений</th>
+                                                <th><i className="bi bi-x-circle me-1"></i> Ошибок</th>
+                                                <th><i className="bi bi-percent me-1"></i> Ошибок</th>
+                                                <th><i className="bi bi-clock me-1"></i> Ср. время</th>
+                                            </tr>
+                                        </thead>
                                         <tbody>
                                             {bigramStats.map((item, idx) => (
                                                 <tr key={idx}>
                                                     <td><strong>{decodeBigram(item.bigram)}</strong></td>
                                                     <td>{item.occurrences}</td>
                                                     <td>{item.errors}</td>
-                                                    <td><Badge
+                                                    <td>
+                                                        <Badge
                                                             bg={null}
-                                                            style={{ backgroundColor: item.error_percent > 20 ? '#dd5132' : '#e6a026'}}
-                                                        >{item.error_percent}%</Badge></td>
+                                                            style={{backgroundColor: item.error_percent > 20 ? '#dd5132' : '#e6a026' }}
+                                                        >
+                                                            {item.error_percent}%
+                                                        </Badge>
+                                                    </td>
                                                     <td>{item.avg_time} мс</td>
                                                 </tr>
                                             ))}
@@ -450,16 +479,28 @@ const StatsPage = () => {
                     </Col>
                 </Row>
 
-                {/* 6. Дополнительная статистика (рекорды и рекомендации) */}
+                {/* 6. Дополнительная статистика */}
                 <Row>
                     <Col md={6} className="d-flex">
                         <Card className="shadow-sm w-100">
                             <Card.Body>
-                                <Card.Title className="text-center">🏆 Личные рекорды</Card.Title>
+                                <Card.Title className="text-center">
+                                    <i className="bi bi-trophy me-2"></i>
+                                    Личные рекорды
+                                </Card.Title>
                                 <div className="d-flex justify-content-around text-center mt-3">
-                                    <div><h3 className="text-primary">{dashboard?.best_speed || 0}</h3><small>макс. скорость</small></div>
-                                    <div><h3 className="text-success">{dashboard?.avg_accuracy || 0}%</h3><small>сред. точность</small></div>
-                                    <div><h3 className="text-info">{Math.floor((dashboard?.total_time || 0) / 60)} ч</h3><small>всего часов</small></div>
+                                    <div>
+                                        <h3 className="text-primary">{dashboard?.best_speed || 0}</h3>
+                                        <small>макс. скорость</small>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-success">{dashboard?.avg_accuracy || 0}%</h3>
+                                        <small>сред. точность</small>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-info">{Math.floor((dashboard?.total_time || 0) / 60)} ч</h3>
+                                        <small>всего часов</small>
+                                    </div>
                                 </div>
                             </Card.Body>
                         </Card>
@@ -467,15 +508,27 @@ const StatsPage = () => {
                     <Col md={6} className="d-flex">
                         <Card className="shadow-sm w-100">
                             <Card.Body>
-                                <Card.Title className="text-center">💡 Рекомендации</Card.Title>
+                                <Card.Title className="text-center">
+                                    <i className="bi bi-lightbulb me-2"></i>
+                                    Рекомендации
+                                </Card.Title>
                                 {letterStats.length > 0 && (
-                                    <p className="mb-1 mt-4">🔴 Чаще всего ошибки в букве <strong>"{decodeLetter(letterStats[0]?.letter)}"</strong> — потренируйте её</p>
+                                    <p className="mb-1 mt-4">
+                                        <i className="bi bi-arrow-right-circle-fill text-danger me-2"></i>
+                                        Чаще всего ошибки в букве <strong>"{decodeLetter(letterStats[0]?.letter)}"</strong> — потренируйте её
+                                    </p>
                                 )}
                                 {bigramStats.length > 0 && (
-                                    <p className="mb-1">🔴 Проблемная биграмма: <strong>"{decodeBigram(bigramStats[0]?.bigram)}"</strong></p>
+                                    <p className="mb-1">
+                                        <i className="bi bi-arrow-right-circle-fill text-danger me-2"></i>
+                                        Проблемная биграмма: <strong>"{decodeBigram(bigramStats[0]?.bigram)}"</strong>
+                                    </p>
                                 )}
                                 {(!letterStats.length && !bigramStats.length) && (
-                                    <p className="text-muted mt-4">Пройдите несколько уроков для получения рекомендаций</p>
+                                    <p className="text-muted mt-4">
+                                        <i className="bi bi-info-circle me-2"></i>
+                                        Пройдите несколько уроков для получения рекомендаций
+                                    </p>
                                 )}
                             </Card.Body>
                         </Card>

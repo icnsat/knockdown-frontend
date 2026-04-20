@@ -87,7 +87,10 @@ const LessonListPage = () => {
                         <Card.Body>
                             <Row className="align-items-center">
                                 <Col md={8}>
-                                    <h5>🔐 Отслеживайте свой прогресс</h5>
+                                    <h5>
+                                        <i className="bi bi-graph-up me-2"></i>
+                                        Отслеживайте свой прогресс
+                                    </h5>
                                     <p className="mb-0 text-muted">
                                         Войдите в аккаунт, чтобы видеть свой прогресс по урокам 
                                         и получать персонализированные рекомендации!
@@ -98,6 +101,7 @@ const LessonListPage = () => {
                                         className="btn btn-warning me-2"
                                         onClick={() => navigate('/auth')}
                                     >
+                                        <i className="bi bi-box-arrow-in-right me-2"></i>
                                         Войти
                                     </button>
                                 </Col>

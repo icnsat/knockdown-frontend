@@ -17,9 +17,9 @@ const StatsArea = ({ stats, isAuthenticated }) => {
             const errorB = b[1].errors / b[1].occurrences;
             
             if (errorA !== errorB) {
-                return errorB - errorA; // по ошибкам (сначала больше)
+                return errorB - errorA;
             }
-            return b[1].avgTime - a[1].avgTime; // по времени перехода (сначала медленнее)
+            return b[1].avgTime - a[1].avgTime;
         })
         .slice(0, 5);
 
@@ -30,9 +30,9 @@ const StatsArea = ({ stats, isAuthenticated }) => {
             const errorB = b[1].errors / b[1].occurrences;
             
             if (errorA !== errorB) {
-                return errorB - errorA; // по ошибкам (сначала больше)
+                return errorB - errorA;
             }
-            return b[1].avgTime - a[1].avgTime; // по времени перехода (сначала медленнее)
+            return b[1].avgTime - a[1].avgTime;
         })
         .slice(0, 5);
 
@@ -101,7 +101,10 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                     <Col md={6}>
                         <Card className="bg-light border-0 h-100">
                             <Card.Body>
-                                <h5>⏱️ Среднее время нажатия</h5>
+                                <h5>
+                                    <i className="bi bi-clock-history me-2"></i>
+                                    Среднее время нажатия
+                                </h5>
                                 {fastestLetter && (
                                     <div className="d-flex justify-content-between mb-2">
                                         <span>Самая быстрая буква:</span>
@@ -124,7 +127,10 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                     <Col md={6}>
                         <Card className="bg-light border-0 h-100">
                             <Card.Body>
-                                <h5>📊 Общее время</h5>
+                                <h5>
+                                    <i className="bi bi-calculator me-2"></i>
+                                    Общее время
+                                </h5>
                                 <div className="d-flex justify-content-between mb-2">
                                     <span>Всего символов:</span>
                                     <span><strong>{stats.characters}</strong></span>
@@ -144,7 +150,8 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                 {!isAuthenticated && (
                     <div className="text-center p-4 mb-4 bg-light rounded">
                         <h5 className="text-secondary mb-3">
-                            🔐 Хотите сохранять прогресс?
+                            <i className="bi bi-lock me-2"></i>
+                            Хотите сохранять прогресс?
                         </h5>
                         <p className="mb-3">
                             Войдите в аккаунт, чтобы ваши результаты сохранялись 
@@ -152,6 +159,7 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                         </p>
                         <div className="d-flex justify-content-center gap-3">
                             <Link to="/auth" className="btn btn-primary" style={{ backgroundColor: '#4F849D', border: 'none' }}>
+                                <i className="bi bi-box-arrow-in-right me-2"></i>
                                 Войти
                             </Link>
                         </div>
@@ -161,7 +169,10 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                 {/* 4. Детальная статистика (проблемные буквы и биграммы) */}
                 <Row className="mt-4">
                     <Col md={6}>
-                        <h5 className="text-center">🔤 Проблемные буквы</h5>
+                        <h5 className="text-center">
+                            <i className="bi bi-chat-text me-2"></i>
+                            Проблемные буквы
+                        </h5>
                         <Table hover size="sm" className="mt-2">
                             <thead>
                                 <tr>
@@ -195,7 +206,10 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                     </Col>
                     
                     <Col md={6}>
-                        <h5 className="text-center">🔗 Проблемные биграммы</h5>
+                        <h5 className="text-center">
+                            <i className="bi bi-link-45deg me-2"></i>
+                            Проблемные биграммы
+                        </h5>
                         <Table hover size="sm" className="mt-2">
                             <thead>
                                 <tr>

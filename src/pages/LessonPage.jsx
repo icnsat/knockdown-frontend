@@ -270,7 +270,10 @@ const LessonPage = () => {
                         <Card.Body>
                             <Row className="align-items-center">
                                 <Col md={8}>
-                                    <h5>🔐 Тренируйтесь и сохраняйте прогресс</h5>
+                                    <h5>
+                                        <i className="bi bi-lock me-2"></i>
+                                        Тренируйтесь и сохраняйте прогресс
+                                    </h5>
                                     <p className="mb-0 text-muted">
                                         Сейчас вы проходите случайный урок. 
                                         Войдите в аккаунт, чтобы ваша статистика сохранялась 
@@ -283,6 +286,7 @@ const LessonPage = () => {
                                         className="btn btn-warning me-2"
                                         onClick={() => navigate('/auth')}
                                     >
+                                        <i className="bi bi-box-arrow-in-right me-2"></i>
                                         Войти
                                     </button>
                                 </Col>
