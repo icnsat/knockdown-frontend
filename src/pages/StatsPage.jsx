@@ -110,7 +110,7 @@ const StatsPage = () => {
         labels: dailyStats.map(item => item.date),
         datasets: [
             {
-                label: 'Скорость (зн/мин)',
+                label: 'Скорость (слов/мин)',
                 data: dailyStats.map(item => item.average_speed_wpm),
                 borderColor: '#8c6e98',
                 tension: 0.3,
@@ -135,7 +135,7 @@ const StatsPage = () => {
             legend: { position: 'top' },
         },
         scales: {
-            y: { title: { display: true, text: 'Скорость (зн/мин)' }, beginAtZero: true },
+            y: { title: { display: true, text: 'Скорость (слов/мин)' }, beginAtZero: true },
             y1: { title: { display: true, text: 'Точность (%)' }, position: 'right', beginAtZero: true, max: 100 }
         }
     };
@@ -146,7 +146,7 @@ const StatsPage = () => {
         labels: sessionsForChart.map((_, idx) => idx + 1),
         datasets: [
             {
-                label: 'Скорость (зн/мин)',
+                label: 'Скорость (слов/мин)',
                 data: sessionsForChart.map(s => s.average_speed_wpm),
                 borderColor: '#37AAAB',
                 tension: 0.3,
@@ -170,7 +170,7 @@ const StatsPage = () => {
         },
         scales: {
             x: { title: { display: true, text: 'Номер тренировки' } },
-            y: { title: { display: true, text: 'Скорость (зн/мин)' }, beginAtZero: true },
+            y: { title: { display: true, text: 'Скорость (слов/мин)' }, beginAtZero: true },
             y1: { title: { display: true, text: 'Точность (%)' }, position: 'right', beginAtZero: true, max: 100 }
         }
     };
@@ -318,7 +318,7 @@ const StatsPage = () => {
                                         data={{
                                             labels: dailyStats.slice(-10).map(item => item.date),
                                             datasets: [{
-                                                label: 'Скорость (зн/мин)',
+                                                label: 'Скорость (слов/мин)',
                                                 data: dailyStats.slice(-10).map(item => item.average_speed_wpm),
                                                 backgroundColor: '#37AAAB',
                                             }]

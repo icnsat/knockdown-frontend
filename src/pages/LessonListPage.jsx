@@ -147,7 +147,7 @@ const LessonListPage = () => {
                                             
                                             {lesson.progress && (
                                                 <small className="text-muted">
-                                                    ⚡ {lesson.progress.best_speed || 0} зн/мин
+                                                    ⚡ {lesson.progress.best_speed || 0} слов/мин
                                                 </small>
                                             )}
                                         </div>

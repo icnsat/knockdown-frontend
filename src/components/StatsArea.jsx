@@ -46,7 +46,7 @@ const StatsArea = ({ stats, isAuthenticated }) => {
 
     const formatTime = (ms) => {
         if (!ms) return '—';
-        return `${ms}мс`;
+        return `${ms} мс`;
     };
 
     return (
@@ -64,7 +64,7 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                             style={{ backgroundColor: '#4F849D' }}
                         >
                             <h2>{stats.speed}</h2>
-                            <p className="mb-0">зн/мин</p>
+                            <p className="mb-0">слов/мин</p>
                         </Card>
                     </Col>
                     <Col md={3}>
@@ -138,7 +138,7 @@ const StatsArea = ({ stats, isAuthenticated }) => {
                                 <div className="d-flex justify-content-between">
                                     <span>Среднее время на символ:</span>
                                     <span>
-                                        <strong>{Math.round(stats.duration * 1000 / stats.characters)}мс</strong>
+                                        <strong>{Math.round(stats.duration * 1000 / stats.characters)} мс</strong>
                                     </span>
                                 </div>
                             </Card.Body>
